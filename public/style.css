@@ -76,6 +76,13 @@ img, svg { display: block; max-width: 100%; }
 .topnav a:hover { color: var(--ink); }
 .topnav a.active { color: var(--ink); }
 .topnav .mail { color: var(--accent); }
+.topnav a[href]::after {
+  content: ""; position: absolute; left: 0; right: 0; bottom: -4px; height: 1.5px;
+  background: var(--accent); transform: scaleX(0); transform-origin: left;
+  transition: transform 0.3s var(--ease);
+}
+.topnav a[href]:hover::after { transform: scaleX(1); }
+.topnav a.active::after { transform: scaleX(1); background: var(--ink-3); }
 .lang { display: inline-flex; align-items: center; gap: 2px; padding-left: 14px; margin-left: -6px; border-left: 1px solid var(--line); }
 .lang-btn { font-family: var(--mono); font-size: 12px; color: var(--ink-3); padding: 3px 4px; line-height: 1; transition: color 0.18s; }
 .lang-btn:hover { color: var(--ink-2); }
@@ -86,7 +93,7 @@ main { width: min(var(--maxw), 100%); margin: 0 auto; padding: 0 var(--pad); }
 section { padding-block: clamp(64px, 12vw, 130px); }
 .intro {
   padding-top: clamp(56px, 12vw, 120px);
-  background: radial-gradient(140% 100% at 28% 42%, var(--paper) 6%, oklch(96.8% 0.008 78 / 0.6) 48%, transparent 84%);
+  background: radial-gradient(140% 100% at 28% 42%, var(--paper) 6%, 48%, transparent 84%);
 }
 
 .section-label {
@@ -126,7 +133,7 @@ section { padding-block: clamp(64px, 12vw, 130px); }
   margin: 0; border: 1px solid var(--line); border-radius: 12px; overflow: hidden; background: var(--paper-2);
   box-shadow: 0 1px 2px var(--shadow-warm), 0 16px 34px oklch(30% 0.04 48 / 0.07);
 }
-.shot img { width: 100%; height: 100%; object-fit: cover; }
+.shot img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.55s var(--ease); }
 .shot-primary { margin-top: 30px; }
 .shot-primary img { aspect-ratio: 16 / 10; }
 .shot-primary.shot-tall img { aspect-ratio: 4 / 3; }
@@ -137,7 +144,10 @@ section { padding-block: clamp(64px, 12vw, 130px); }
 .shot-row .shot img { aspect-ratio: 16 / 10; }
 .shot-row .shot.shot-tall img { aspect-ratio: 3 / 4; }
 .shot { transition: transform 0.4s var(--ease), box-shadow 0.4s var(--ease); }
-@media (hover: hover) { .shot:hover { transform: translateY(-4px); box-shadow: 0 2px 4px var(--shadow-warm), 0 26px 48px oklch(30% 0.04 48 / 0.12); } }
+@media (hover: hover) {
+  .shot:hover { transform: translateY(-4px); box-shadow: 0 2px 4px var(--shadow-warm), 0 26px 48px oklch(30% 0.04 48 / 0.12); }
+  .shot:hover img { transform: scale(1.045); }
+}
 
 /* ---------- about ---------- */
 .about-grid { display: grid; grid-template-columns: 200px 1fr; gap: clamp(28px, 5vw, 56px); align-items: start; }
@@ -185,13 +195,30 @@ section { padding-block: clamp(64px, 12vw, 130px); }
 /* ---------- scroll reveal (keyframe-based, JS-gated — content can never trap) ---------- */
 .reveal.pre { opacity: 0; }
 .reveal.in { animation: reveal-in 0.72s var(--ease) both; }
-.shot.reveal.in { animation: reveal-fade 0.9s var(--ease) both; }
+.shot.reveal.in { animation: shot-in 0.85s var(--ease) both; }
 @keyframes reveal-in { from { opacity: 0; transform: translateY(22px); } to { opacity: 1; transform: none; } }
-@keyframes reveal-fade { from { opacity: 0; } to { opacity: 1; } }
+@keyframes shot-in { from { opacity: 0; transform: translateY(24px) scale(0.985); } to { opacity: 1; transform: none; } }
+/* staggered reveal within image rows */
+.shot-row .shot:nth-child(2).reveal.in { animation-delay: 0.08s; }
+.shot-row .shot:nth-child(3).reveal.in { animation-delay: 0.16s; }
+.shot-row .shot:nth-child(4).reveal.in { animation-delay: 0.24s; }
 @media (prefers-reduced-motion: reduce) {
   .reveal.pre { opacity: 1; }
-  .reveal.in { animation: none; }
+  .reveal.in, .shot.reveal.in { animation: none; }
 }
+
+/* ---------- intro load-in + alive details (base stays visible; backwards fill only hides during the run) ---------- */
+@media (prefers-reduced-motion: no-preference) {
+  .intro > * { animation: intro-in 0.75s var(--ease) backwards; }
+  .intro > *:nth-child(1) { animation-delay: 0.06s; }
+  .intro > *:nth-child(2) { animation-delay: 0.14s; }
+  .intro > *:nth-child(3) { animation-delay: 0.22s; }
+  .intro > *:nth-child(4) { animation-delay: 0.30s; }
+  .intro > *:nth-child(5) { animation-delay: 0.38s; }
+  .status .dot { animation: dot-pulse 2.6s ease-in-out infinite; }
+}
+@keyframes intro-in { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+@keyframes dot-pulse { 0%, 100% { box-shadow: 0 0 0 3px oklch(62% 0.17 150 / 0.18); } 50% { box-shadow: 0 0 0 6px oklch(62% 0.17 150 / 0.03); } }
 
 /* ---------- motion ---------- */
 /* No entrance/opacity animation anywhere — content is ALWAYS visible, so nothing
