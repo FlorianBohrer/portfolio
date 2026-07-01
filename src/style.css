@@ -1,0 +1,219 @@
+/* Hallmark · pre-emit critique: P5 H5 E5 S5 R5 V5
+ * macrostructure: Work-First Index · tone: minimal-mono · anchor hue: near-monochrome + quiet blue
+ * Light paper, near-black ink, JetBrains Mono metadata, strict grid. Real project screenshots
+ * shown large. Restrained motion. Built to read like a real dev/design portfolio, not a template.
+ */
+
+:root {
+  /* warm editorial palette — cream paper, warm charcoal ink, terracotta accent, honey highlight */
+  --paper: oklch(96.8% 0.008 78);
+  --paper-2: oklch(94.2% 0.01 76);
+  --paper-3: oklch(91.4% 0.012 74);
+  --ink: oklch(27% 0.016 52);
+  --ink-2: oklch(47% 0.014 50);
+  --ink-3: oklch(60.5% 0.012 54);
+  --line: oklch(33% 0.03 48 / 0.15);
+  --line-2: oklch(33% 0.03 48 / 0.07);
+  --accent: oklch(51% 0.135 42);
+  --accent-soft: oklch(51% 0.135 42 / 0.12);
+  --honey: oklch(84% 0.12 84);
+  --shadow-warm: oklch(30% 0.04 48 / 0.09);
+
+  --sans: "Inter", system-ui, -apple-system, sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+
+  --maxw: 880px;
+  --pad: clamp(20px, 6vw, 48px);
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+html, body { overflow-x: clip; }
+
+body {
+  font-family: var(--sans);
+  background: var(--paper);
+  color: var(--ink);
+  line-height: 1.6;
+  letter-spacing: -0.011em;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  position: relative;
+}
+
+a { color: inherit; text-decoration: none; }
+img, svg { display: block; max-width: 100%; }
+
+/* animated header background (generative flow-field, drawn in main.js) */
+#hero-bg {
+  position: absolute; top: 0; left: 0; width: 100%; height: 100svh; z-index: 0;
+  display: block; pointer-events: none;
+  -webkit-mask-image: linear-gradient(#000 46%, transparent 88%);
+  mask-image: linear-gradient(#000 46%, transparent 88%);
+}
+.topbar, main { position: relative; z-index: 1; }
+.topbar { z-index: 40; }
+
+.mono { font-family: var(--mono); font-feature-settings: "tnum"; }
+
+::selection { background: var(--accent); color: var(--paper); }
+
+/* ---------- topbar ---------- */
+.topbar {
+  position: sticky; top: 0; z-index: 50;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 18px var(--pad);
+  background: color-mix(in oklch, var(--paper) 82%, transparent);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.3s var(--ease);
+}
+.topbar.scrolled { border-color: var(--line-2); }
+.wordmark { font-weight: 600; font-size: 15px; letter-spacing: -0.02em; }
+.topnav { display: flex; align-items: center; gap: clamp(14px, 3vw, 30px); font-size: 13px; }
+.topnav a { color: var(--ink-2); transition: color 0.18s; position: relative; }
+.topnav a:hover { color: var(--ink); }
+.topnav a.active { color: var(--ink); }
+.topnav .mail { color: var(--accent); }
+.lang { display: inline-flex; align-items: center; gap: 2px; padding-left: 14px; margin-left: -6px; border-left: 1px solid var(--line); }
+.lang-btn { font-family: var(--mono); font-size: 12px; color: var(--ink-3); padding: 3px 4px; line-height: 1; transition: color 0.18s; }
+.lang-btn:hover { color: var(--ink-2); }
+.lang-btn.active { color: var(--ink); }
+
+/* ---------- shared shell ---------- */
+main { width: min(var(--maxw), 100%); margin: 0 auto; padding: 0 var(--pad); }
+section { padding-block: clamp(64px, 12vw, 130px); }
+.intro {
+  padding-top: clamp(56px, 12vw, 120px);
+  background: radial-gradient(140% 100% at 28% 42%, var(--paper) 6%, oklch(96.8% 0.008 78 / 0.6) 48%, transparent 84%);
+}
+
+.section-label {
+  display: flex; align-items: center; justify-content: space-between;
+  font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-3);
+  padding-bottom: 20px; margin-bottom: clamp(40px, 7vw, 72px);
+  border-bottom: 1px solid var(--line);
+}
+
+/* ---------- intro ---------- */
+.eyebrow { font-size: 12.5px; letter-spacing: 0.02em; color: var(--ink-3); margin-bottom: 26px; }
+.intro h1 {
+  font-size: clamp(1.7rem, 3.9vw, 2.65rem); font-weight: 500; line-height: 1.18;
+  letter-spacing: -0.025em; max-width: 20ch; color: var(--ink);
+}
+.intro-bio { margin-top: 28px; max-width: 54ch; }
+.intro-bio p { color: var(--ink-2); font-size: clamp(1rem, 1.4vw, 1.12rem); }
+.intro-links { display: flex; flex-wrap: wrap; gap: 8px 22px; margin-top: 34px; font-size: 13px; }
+.intro-links a { color: var(--ink-2); border-bottom: 1px solid var(--line); padding-bottom: 3px; transition: color 0.18s, border-color 0.18s; }
+.intro-links a:hover { color: var(--ink); border-color: var(--ink); }
+.status { display: inline-flex; align-items: center; gap: 9px; margin-top: 26px; font-size: 12.5px; color: var(--ink-2); }
+.status .dot { width: 7px; height: 7px; border-radius: 50%; background: oklch(62% 0.17 150); box-shadow: 0 0 0 3px oklch(62% 0.17 150 / 0.16); }
+
+.fill { color: var(--accent) !important; border-bottom-style: dashed !important; }
+
+/* ---------- work / projects ---------- */
+.project { padding-block: clamp(48px, 8vw, 88px); border-top: 1px solid var(--line); }
+.project:first-of-type { border-top: none; padding-top: 0; }
+.project-head { display: flex; align-items: baseline; justify-content: space-between; gap: 20px; flex-wrap: wrap; }
+.project-head > div { display: flex; align-items: baseline; gap: 14px; }
+.idx { font-size: 13px; color: var(--ink-3); }
+.project-head h2 { font-size: clamp(1.25rem, 2.4vw, 1.7rem); font-weight: 600; letter-spacing: -0.02em; }
+.project-meta { font-size: 12px; color: var(--ink-3); letter-spacing: 0.01em; }
+.project-desc { margin-top: 16px; max-width: 62ch; color: var(--ink-2); font-size: clamp(0.98rem, 1.3vw, 1.08rem); }
+
+.shot {
+  margin: 0; border: 1px solid var(--line); border-radius: 12px; overflow: hidden; background: var(--paper-2);
+  box-shadow: 0 1px 2px var(--shadow-warm), 0 16px 34px oklch(30% 0.04 48 / 0.07);
+}
+.shot img { width: 100%; height: 100%; object-fit: cover; }
+.shot-primary { margin-top: 30px; }
+.shot-primary img { aspect-ratio: 16 / 10; }
+.shot-primary.shot-tall img { aspect-ratio: 4 / 3; }
+.shot-row { display: grid; gap: clamp(12px, 1.6vw, 18px); margin-top: clamp(12px, 1.6vw, 18px); }
+.shot-row.cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.shot-row.cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.shot-row.cols-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.shot-row .shot img { aspect-ratio: 16 / 10; }
+.shot-row .shot.shot-tall img { aspect-ratio: 3 / 4; }
+.shot { transition: transform 0.4s var(--ease), box-shadow 0.4s var(--ease); }
+@media (hover: hover) { .shot:hover { transform: translateY(-4px); box-shadow: 0 2px 4px var(--shadow-warm), 0 26px 48px oklch(30% 0.04 48 / 0.12); } }
+
+/* ---------- about ---------- */
+.about-grid { display: grid; grid-template-columns: 200px 1fr; gap: clamp(28px, 5vw, 56px); align-items: start; }
+.portrait { margin: 0; border: 1px solid var(--line); border-radius: 12px; overflow: hidden; box-shadow: 0 1px 2px var(--shadow-warm), 0 14px 30px oklch(30% 0.04 48 / 0.06); }
+.portrait img { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; object-position: 50% 22%; filter: grayscale(1) contrast(1.03); transition: filter 0.5s var(--ease); }
+.portrait:hover img { filter: none; }
+.about-text p { color: var(--ink-2); font-size: clamp(1rem, 1.3vw, 1.1rem); max-width: 58ch; }
+.about-text p + p { margin-top: 16px; }
+.cv-list { margin-top: 30px; border-top: 1px solid var(--line); font-size: 13px; }
+.cv-list > div { display: grid; grid-template-columns: 90px 1fr; gap: 16px; padding: 13px 0; border-bottom: 1px solid var(--line); }
+.cv-list dt { color: var(--ink-3); }
+.cv-list dd { color: var(--ink); }
+.about-facts { margin-top: 24px; font-size: 12.5px; color: var(--ink-3); }
+
+/* ---------- contact ---------- */
+.contact { padding-bottom: clamp(60px, 10vw, 110px); }
+.big-mail {
+  display: inline-block; font-size: clamp(1.6rem, 5.5vw, 3.4rem); font-weight: 500;
+  letter-spacing: -0.03em; color: var(--ink);
+  background: linear-gradient(var(--ink), var(--ink)) no-repeat; background-size: 0% 1.5px; background-position: 0 100%;
+  transition: background-size 0.4s var(--ease), color 0.2s;
+}
+.big-mail:hover { background-size: 100% 1.5px; color: var(--accent); }
+.big-mail:hover { background-image: linear-gradient(var(--accent), var(--accent)); }
+.personal-note { margin-top: 28px; max-width: 46ch; color: var(--ink-2); font-size: clamp(1rem, 1.3vw, 1.08rem); }
+.contact-links { display: flex; flex-wrap: wrap; gap: 10px 24px; margin-top: 30px; font-size: 13px; }
+.contact-links a { color: var(--ink-2); border-bottom: 1px solid var(--line); padding-bottom: 3px; transition: color 0.18s, border-color 0.18s; }
+.contact-links a:hover { color: var(--ink); border-color: var(--ink); }
+
+/* ---------- footer ---------- */
+.footer {
+  width: min(var(--maxw), 100%); margin: 0 auto; padding: 26px var(--pad) 40px;
+  border-top: 1px solid var(--line);
+  display: flex; align-items: center; justify-content: space-between; gap: 14px; flex-wrap: wrap;
+  font-size: 12px; color: var(--ink-3);
+}
+.footer .to-top { transition: color 0.18s; }
+.footer .to-top:hover { color: var(--ink); }
+#clock { color: var(--ink-2); }
+
+/* ---------- a11y ---------- */
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 4px; }
+:focus:not(:focus-visible) { outline: none; }
+
+/* ---------- scroll reveal (keyframe-based, JS-gated — content can never trap) ---------- */
+.reveal.pre { opacity: 0; }
+.reveal.in { animation: reveal-in 0.72s var(--ease) both; }
+.shot.reveal.in { animation: reveal-fade 0.9s var(--ease) both; }
+@keyframes reveal-in { from { opacity: 0; transform: translateY(22px); } to { opacity: 1; transform: none; } }
+@keyframes reveal-fade { from { opacity: 0; } to { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) {
+  .reveal.pre { opacity: 1; }
+  .reveal.in { animation: none; }
+}
+
+/* ---------- motion ---------- */
+/* No entrance/opacity animation anywhere — content is ALWAYS visible, so nothing
+   can ever get stuck invisible. Motion lives only in safe hover transitions. */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  * { animation-duration: 0.001ms !important; transition-duration: 0.05ms !important; }
+}
+
+/* ---------- responsive ---------- */
+@media (max-width: 720px) {
+  .project-head { gap: 6px; }
+  .project-meta { order: 3; }
+  .shot-row.cols-3, .shot-row.cols-4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .about-grid { grid-template-columns: 1fr; }
+  .portrait { max-width: 180px; }
+  .cv-list > div { grid-template-columns: 76px 1fr; gap: 12px; }
+}
+@media (max-width: 560px) {
+  .topnav { gap: 14px; }
+  .topnav a[href^="#"] { display: none; } /* hide Arbeiten/Über; keep CV, Email, DE/EN */
+}
+@media (max-width: 460px) {
+  .shot-row.cols-2, .shot-row.cols-3 { grid-template-columns: 1fr; }
+}

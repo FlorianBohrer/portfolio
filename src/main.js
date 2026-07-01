@@ -1,0 +1,186 @@
+import "./style.css";
+
+/* current year */
+const yearEl = document.getElementById("year");
+if (yearEl) yearEl.textContent = new Date().getFullYear();
+
+/* ---------- language toggle (DE / EN) ---------- */
+let lang = localStorage.getItem("lang") === "en" ? "en" : "de";
+
+function applyLang(next) {
+  lang = next;
+  document.documentElement.lang = next;
+  document.querySelectorAll("[data-en]").forEach((el) => {
+    if (el.dataset.de === undefined) el.dataset.de = el.textContent; // capture German once
+    el.textContent = next === "en" ? el.dataset.en : el.dataset.de;
+  });
+  document.querySelectorAll(".lang-btn").forEach((b) =>
+    b.classList.toggle("active", b.dataset.lang === next)
+  );
+  localStorage.setItem("lang", next);
+  tickClock();
+}
+
+document.querySelectorAll(".lang-btn").forEach((b) =>
+  b.addEventListener("click", () => applyLang(b.dataset.lang))
+);
+
+/* ---------- Bozen local time ---------- */
+const clockEl = document.getElementById("clock");
+function tickClock() {
+  if (!clockEl) return;
+  const t = new Intl.DateTimeFormat(lang === "en" ? "en-GB" : "de-DE", {
+    hour: "2-digit",
+    minute: "2-digit",
+    timeZone: "Europe/Rome",
+  }).format(new Date());
+  clockEl.textContent = lang === "en" ? t : `${t} Uhr`;
+}
+
+applyLang(lang); // sets language + first clock render
+setInterval(tickClock, 20000);
+
+/* ---------- animated header background: flowing streamlines (ink on paper) ---------- */
+(() => {
+  const canvas = document.getElementById("hero-bg");
+  if (!canvas) return;
+  const ctx = canvas.getContext("2d", { alpha: false });
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  // rgb approximations of the warm OKLCH palette
+  const PAPER = [244, 240, 231];
+  const INK = [46, 39, 33];
+  const ACCENT = [176, 98, 60]; // terracotta
+  const HONEY = [230, 190, 92];
+
+  let W = 0, H = 0, DPR = 1, running = false, raf = 0;
+  const mouse = { x: -9999, y: -9999, active: false };
+
+  const flow = (x, y, t) =>
+    (Math.sin(x * 0.0015 + t * 0.00028) + Math.cos(y * 0.0018 - t * 0.00022) + Math.sin((x + y) * 0.0009 + t * 0.00035)) * 1.65;
+
+  function resize() {
+    DPR = Math.min(2, window.devicePixelRatio || 1);
+    W = canvas.clientWidth; H = canvas.clientHeight || Math.round(window.innerHeight);
+    canvas.width = Math.floor(W * DPR); canvas.height = Math.floor(H * DPR);
+    ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+    ctx.fillStyle = `rgb(${PAPER})`; ctx.fillRect(0, 0, W, H);
+  }
+
+  function draw(t) {
+    ctx.fillStyle = `rgb(${PAPER})`; ctx.fillRect(0, 0, W, H);
+    ctx.lineCap = "round";
+    const step = Math.max(48, Math.round(W / 26));
+    let idx = 0;
+    for (let sy = -30; sy < H + 30; sy += step) {
+      for (let sx = -30; sx < W + 30; sx += step) {
+        idx++;
+        let x = sx, y = sy;
+        ctx.beginPath();
+        ctx.moveTo(x, y);
+        for (let s = 0; s < 34; s++) {
+          let a = flow(x, y, t);
+          if (mouse.active) {
+            const dx = x - mouse.x, dy = y - mouse.y, d = Math.hypot(dx, dy);
+            if (d < 220) a += (1 - d / 220) * 2.8; // bend streamlines around the cursor
+          }
+          x += Math.cos(a) * 9;
+          y += Math.sin(a) * 9;
+          ctx.lineTo(x, y);
+        }
+        const c = (idx * 0.137) % 1;
+        let col = INK, al = 0.1, lw = 1;
+        if (c > 0.9) { col = HONEY; al = 0.26; lw = 1.4; }
+        else if (c > 0.74) { col = ACCENT; al = 0.17; lw = 1.3; }
+        ctx.lineWidth = lw;
+        ctx.strokeStyle = `rgba(${col},${al})`;
+        ctx.stroke();
+      }
+    }
+  }
+
+  function frame(t) {
+    if (!running) return;
+    draw(t);
+    raf = requestAnimationFrame(frame);
+  }
+
+  const start = () => { if (!running && !reduce) { running = true; raf = requestAnimationFrame(frame); } };
+  const stop = () => { running = false; cancelAnimationFrame(raf); };
+
+  resize();
+  window.addEventListener("resize", resize, { passive: true });
+  window.addEventListener("pointermove", (e) => {
+    mouse.x = e.clientX;
+    mouse.y = e.clientY - canvas.getBoundingClientRect().top;
+    mouse.active = true;
+  }, { passive: true });
+  window.addEventListener("pointerleave", () => (mouse.active = false));
+  document.addEventListener("visibilitychange", () => (document.hidden ? stop() : start()));
+
+  if (!reduce) {
+    if ("IntersectionObserver" in window) {
+      new IntersectionObserver(([e]) => (e.isIntersecting ? start() : stop()), { threshold: 0 }).observe(canvas);
+    }
+    start();
+  } else {
+    draw(2000); // one calm static frame
+  }
+})();
+
+/* ---------- topbar hairline on scroll ---------- */
+const topbar = document.querySelector(".topbar");
+const onScroll = () => topbar?.classList.toggle("scrolled", window.scrollY > 8);
+onScroll();
+window.addEventListener("scroll", onScroll, { passive: true });
+
+/* ---------- scrollspy — active nav link ---------- */
+const navLinks = new Map(
+  [...document.querySelectorAll(".topnav a")]
+    .filter((a) => a.getAttribute("href")?.startsWith("#"))
+    .map((a) => [a.getAttribute("href").slice(1), a])
+);
+if ("IntersectionObserver" in window && navLinks.size) {
+  const spy = new IntersectionObserver(
+    (entries) => {
+      for (const e of entries) {
+        if (e.isIntersecting) {
+          navLinks.forEach((l) => l.classList.remove("active"));
+          navLinks.get(e.target.id)?.classList.add("active");
+        }
+      }
+    },
+    { rootMargin: "-40% 0px -55% 0px" }
+  );
+  document.querySelectorAll("main section[id]").forEach((s) => spy.observe(s));
+}
+
+/* ---------- scroll reveal for the rest of the page (safe, JS-gated, no trap) ---------- */
+(() => {
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const targets = [
+    ...document.querySelectorAll(
+      ".section-label, .project-head, .project-desc, .shot, .about-grid, .big-mail, .contact-links"
+    ),
+  ];
+  targets.forEach((el) => el.classList.add("reveal"));
+  if (reduce || !("IntersectionObserver" in window)) return; // leave everything visible
+
+  targets.forEach((el) => el.classList.add("pre")); // hide all reveal targets (all sit below the hero)
+  const io = new IntersectionObserver(
+    (entries) => {
+      for (const e of entries) {
+        if (e.isIntersecting) {
+          e.target.classList.remove("pre");
+          e.target.classList.add("in");
+          io.unobserve(e.target);
+        }
+      }
+    },
+    { threshold: 0.1, rootMargin: "0px 0px -5% 0px" }
+  );
+  targets.forEach((el) => io.observe(el));
+
+  // failsafe: never leave anything hidden, even if the observer misbehaves
+  setTimeout(() => targets.forEach((el) => el.classList.remove("pre")), 2500);
+})();

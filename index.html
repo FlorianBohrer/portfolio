@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Florian Bohrer — UI &amp; Frontend Engineer</title>
+    <meta
+      name="description"
+      content="Florian Bohrer — UI &amp; Frontend Engineer aus Bozen. Ausgewählte Arbeiten: AR/IoT, EV-Ladesäulen-UI, Self-Check-in-Kiosk und eine eigene Task-App."
+    />
+    <meta name="theme-color" content="#f4f0e8" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Florian Bohrer — UI & Frontend Engineer" />
+    <meta property="og:description" content="Ausgewählte Arbeiten aus UI, Frontend, AR/IoT und UX." />
+    <meta property="og:image" content="/media/florian.jpg" />
+    <meta property="og:locale" content="de_DE" />
+
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232e2721'/%3E%3Ctext x='16' y='22' font-family='monospace' font-size='16' fill='%23f4f0e8' text-anchor='middle'%3Efb%3C/text%3E%3C/svg%3E"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <script type="module" src="/src/main.js"></script>
+  </head>
+  <body>
+    <canvas id="hero-bg" aria-hidden="true"></canvas>
+    <header class="topbar">
+      <a href="#top" class="wordmark">Florian Bohrer</a>
+      <nav class="topnav mono" aria-label="Primär">
+        <a href="#work" data-en="Work">Arbeiten</a>
+        <a href="#about" data-en="About">Über</a>
+        <a href="mailto:florianbohrer@yahoo.com" class="mail">Email</a>
+        <span class="lang" role="group" aria-label="Sprache">
+          <button type="button" class="lang-btn" data-lang="de">DE</button>
+          <button type="button" class="lang-btn" data-lang="en">EN</button>
+        </span>
+      </nav>
+    </header>
+
+    <main id="top">
+      <!-- INTRO -->
+      <section class="intro">
+        <p class="eyebrow mono" data-en="UI & Frontend Engineer — Bolzano, IT">UI &amp; Frontend Engineer — Bozen, IT</p>
+        <h1 data-en="I build web interfaces, with a focus on UI, frontend and UX.">
+          Ich baue Web-Interfaces, mit Fokus auf UI, Frontend und UX.
+        </h1>
+        <div class="intro-bio">
+          <p data-en="Media informatics graduate from Bolzano. In research projects I turned IoT data into interactive interfaces — from an AR beehive on the HoloLens 2 to web apps. I'm currently finishing my master's.">
+            Medieninformatiker aus Bozen. In Forschungsprojekten habe ich IoT-Daten in
+            interaktive Interfaces übersetzt — vom AR-Bienenstock auf der HoloLens 2 bis zu
+            Web-Apps. Gerade schließe ich meinen Master ab.
+          </p>
+        </div>
+        <ul class="intro-links mono">
+          <li><a href="mailto:florianbohrer@yahoo.com">Email ↗</a></li>
+          <li><a href="https://github.com/FlorianBohrer" target="_blank" rel="noopener noreferrer" class="fill">GitHub ↗</a></li>
+          <li><a href="#" class="fill">LinkedIn ↗</a></li>
+        </ul>
+        <p class="status mono">
+          <span class="dot"></span>
+          <span data-en="Available for frontend and UI roles">Verfügbar für Frontend- und UI-Rollen</span>
+        </p>
+      </section>
+
+      <!-- WORK -->
+      <section class="work" id="work">
+        <div class="section-label mono"><span data-en="Selected Work">Ausgewählte Arbeiten</span><span>04</span></div>
+
+        <!-- 01 AR Hive -->
+        <article class="project">
+          <header class="project-head">
+            <div>
+              <span class="idx mono">01</span>
+              <h2 data-en="AR Hive — IoT Beehive">AR Hive — IoT-Bienenstock</h2>
+            </div>
+            <span class="project-meta mono" data-en="2023 · Bachelor's thesis · React · A-Frame/WebXR · Blender">2023 · Bachelorarbeit · React · A-Frame/WebXR · Blender</span>
+          </header>
+          <p class="project-desc" data-en="A React web app that explains a smart beehive — with AR integration, a 3D model and a quiz. Plus an AR dashboard that shows live sensor data in the room on the HoloLens 2.">
+            Eine React-Web-App, die einen smarten Bienenstock erklärt — mit AR-Integration,
+            3D-Modell und Quiz. Dazu ein AR-Dashboard, das Live-Sensordaten direkt im Raum auf
+            der HoloLens 2 anzeigt.
+          </p>
+          <figure class="shot shot-primary">
+            <img src="/media/projects/arhive-3.png" alt="AR Hive Website — Startseite" loading="lazy" />
+          </figure>
+          <div class="shot-row cols-3">
+            <figure class="shot"><img src="/media/projects/arhive-1.png" alt="AR-Dashboard mit Live-Sensordaten (HoloLens 2)" loading="lazy" /></figure>
+            <figure class="shot"><img src="/media/projects/arhive-2.png" alt="AR-Controller-Panel" loading="lazy" /></figure>
+            <figure class="shot"><img src="/media/projects/arhive-4.png" alt="Sensorübersicht der Website" loading="lazy" /></figure>
+          </div>
+        </article>
+
+        <!-- 02 Hypercharger -->
+        <article class="project">
+          <header class="project-head">
+            <div>
+              <span class="idx mono">02</span>
+              <h2 data-en="Hypercharger — Charging Station UI">Hypercharger — Ladesäulen-Interface</h2>
+            </div>
+            <span class="project-meta mono" data-en="2025 · Concept & UI · Vue · CSS/SVG">2025 · Konzept &amp; UI · Vue · CSS/SVG</span>
+          </header>
+          <p class="project-desc" data-en="Concept and UI for the interface of an EV fast-charging station — the full flow from welcome to authentication to completion.">
+            Konzept und UI für das Interface einer EV-Schnellladesäule — der komplette Ablauf
+            von der Begrüßung über die Authentifizierung bis zum Abschluss.
+          </p>
+          <figure class="shot shot-primary">
+            <img src="/media/projects/charger-1.png" alt="Hypercharger Willkommensbildschirm" loading="lazy" />
+          </figure>
+          <div class="shot-row cols-2">
+            <figure class="shot"><img src="/media/projects/charger-2.png" alt="Hypercharger — Ladevorgang" loading="lazy" /></figure>
+            <figure class="shot"><img src="/media/projects/charger-3.png" alt="Hypercharger — weiterer Screen" loading="lazy" /></figure>
+          </div>
+        </article>
+
+        <!-- 03 MyTyrolStay -->
+        <article class="project">
+          <header class="project-head">
+            <div>
+              <span class="idx mono">03</span>
+              <h2>MyTyrolStay — Self-Check-in</h2>
+            </div>
+            <span class="project-meta mono" data-en="2025 · UX & prototyping · Figma · usability testing">2025 · UX &amp; Prototyping · Figma · Usability-Testing</span>
+          </header>
+          <p class="project-desc" data-en="UX design for an autonomous hotel check-in kiosk (HCI master's project): PACT analysis, Figma prototype and usability tests with SUS evaluation. Multilingual, for guests in Bolzano.">
+            UX-Design eines autonomen Hotel-Check-in-Kiosks (HCI-Masterprojekt): PACT-Analyse,
+            Figma-Prototyp und Usability-Tests mit SUS-Auswertung. Mehrsprachig, für Gäste in Bozen.
+          </p>
+          <div class="shot-row cols-4" style="margin-top: 30px">
+            <figure class="shot shot-tall"><img src="/media/projects/checkin-01.png" alt="Willkommensscreen" loading="lazy" /></figure>
+            <figure class="shot shot-tall"><img src="/media/projects/checkin-06.png" alt="Ausweis scannen" loading="lazy" /></figure>
+            <figure class="shot shot-tall"><img src="/media/projects/checkin-08.png" alt="Gesicht scannen" loading="lazy" /></figure>
+            <figure class="shot shot-tall"><img src="/media/projects/checkin-11.png" alt="Zimmernummer" loading="lazy" /></figure>
+          </div>
+        </article>
+
+        <!-- 04 Task App -->
+        <article class="project">
+          <header class="project-head">
+            <div>
+              <span class="idx mono">04</span>
+              <h2 data-en="Task App — personal product">Task-App — eigenes Produkt</h2>
+            </div>
+            <span class="project-meta mono" data-en="2025 · Personal product · Web app">2025 · Eigenes Produkt · Web-App</span>
+          </header>
+          <p class="project-desc" data-en="A small task app I built for myself — with categories, folders and progress.">
+            Eine kleine Task-App, die ich selbst gebaut habe — mit Kategorien, Ordnern und Fortschritt.
+          </p>
+          <div class="shot-row cols-2">
+            <figure class="shot"><img src="/media/projects/todo-1.png" alt="Task-App — Alle Aufgaben" loading="lazy" /></figure>
+            <figure class="shot"><img src="/media/projects/todo-2.png" alt="Task-App — Ordner/Kategorien" loading="lazy" /></figure>
+          </div>
+        </article>
+      </section>
+
+      <!-- ABOUT -->
+      <section class="about" id="about">
+        <div class="section-label mono"><span data-en="About">Über</span></div>
+        <div class="about-grid">
+          <figure class="portrait">
+            <img src="/media/florian.jpg" alt="Florian Bohrer" loading="lazy" />
+          </figure>
+          <div class="about-text">
+            <p data-en="I'm Florian, a media informatics graduate (B.Sc.) from Bolzano. In research projects at Umwelt-Campus Birkenfeld I turned IoT data into interactive interfaces — from an AR beehive on the HoloLens 2 to web apps.">
+              Ich bin Florian, Medieninformatiker (B.&nbsp;Sc.) aus Bozen. In Forschungsprojekten
+              an der Umwelt-Campus Birkenfeld habe ich IoT-Daten in interaktive Interfaces übersetzt —
+              vom AR-Bienenstock auf der HoloLens 2 bis zu Web-Apps.
+            </p>
+            <p data-en="Focus: React and frontend, UI and UX with usability testing. Plus four years of visual communication at the student union (AStA).">
+              Schwerpunkte: React und Frontend, UI und UX mit Usability-Testing. Dazu vier Jahre
+              visuelle Kommunikation im AStA.
+            </p>
+            <dl class="cv-list mono">
+              <div><dt>2024–26</dt><dd data-en="Master's in Media Informatics (in progress) — Umwelt-Campus Birkenfeld">Master Medieninformatik (in Arbeit) — Umwelt-Campus Birkenfeld</dd></div>
+              <div><dt>2022–23</dt><dd data-en="Research assistant, AR & AI — Institute for Software Systems">Wiss. Mitarbeiter, AR &amp; KI — Institut für Softwaresysteme</dd></div>
+              <div><dt>2019–24</dt><dd data-en="Student union (AStA) — public relations">AStA — Öffentlichkeitsarbeit</dd></div>
+              <div><dt>2017–23</dt><dd data-en="B.Sc. Media Informatics — Umwelt-Campus Birkenfeld">B.&nbsp;Sc. Medieninformatik — Umwelt-Campus Birkenfeld</dd></div>
+            </dl>
+            <p class="about-facts mono" data-en="German (native) · English B2  /  Climbing · Cycling · Running">
+              Deutsch (Muttersprache) · Englisch B2 &nbsp;/&nbsp; Klettern · Radfahren · Laufen
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- CONTACT -->
+      <section class="contact" id="contact">
+        <div class="section-label mono"><span data-en="Contact">Kontakt</span></div>
+        <a href="mailto:florianbohrer@yahoo.com" class="big-mail">florianbohrer@yahoo.com</a>
+        <ul class="contact-links mono">
+          <li><a href="https://github.com/FlorianBohrer" class="fill">GitHub ↗</a></li>
+          <li><a href="https://www.linkedin.com/in/florianbohrer" class="fill">LinkedIn ↗</a></li>
+        </ul>
+      </section>
+    </main>
+
+    <footer class="footer mono">
+      <span><span data-en="Bolzano">Bozen</span> · <span id="clock">—</span></span>
+      <span>© <span id="year">2026</span> Florian Bohrer</span>
+      <a href="#top" class="to-top">↑ Top</a>
+    </footer>
+  </body>
+</html>
