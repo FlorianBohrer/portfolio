@@ -117,7 +117,7 @@ section { padding-block: clamp(64px, 12vw, 130px); }
 .status { display: inline-flex; align-items: center; gap: 9px; margin-top: 26px; font-size: 12.5px; color: var(--ink-2); }
 .status .dot { width: 7px; height: 7px; border-radius: 50%; background: oklch(62% 0.17 150); box-shadow: 0 0 0 3px oklch(62% 0.17 150 / 0.16); }
 
-.fill { color: var(--accent) !important; border-bottom-style: dashed !important; }
+.fill { color: #40dc9e !important; border-bottom-style: dashed !important; }
 
 /* ---------- work / projects ---------- */
 .project { padding-block: clamp(48px, 8vw, 88px); border-top: 1px solid var(--line); scroll-margin-top: 84px; border-radius: 14px; }
