@@ -1,9 +1,7 @@
-import { defineConfig } from "vite";
+import { defineConfig } from 'vite'
+import vue from '@vitejs/plugin-vue' 
 
-// base: "./" → relative asset paths so the built site works on GitHub Pages
-// subpaths, Netlify, Vercel or any static host without config.
 export default defineConfig({
-  base: "./",
-  server: { port: 5180, host: true },
-  build: { target: "es2020" },
-});
+  base: '/portfolio/', 
+  plugins: [vue()],
+})

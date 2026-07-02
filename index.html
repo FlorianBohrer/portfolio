@@ -12,7 +12,7 @@
     <meta property="og:type" content="website" />
     <meta property="og:title" content="Florian Bohrer — UI & Frontend Engineer" />
     <meta property="og:description" content="Ausgewählte Arbeiten aus UI, Frontend, AR/IoT und UX." />
-    <meta property="og:image" content="/media/florian.jpg" />
+    <meta property="og:image" content="media/florian.jpg" />
     <meta property="og:locale" content="de_DE" />
 
     <link
@@ -33,8 +33,8 @@
           (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
       } catch (e) {}
     </script>
-    <link rel="stylesheet" href="/style.css" />
-    <script type="module" src="/src/main.js"></script>
+    <link rel="stylesheet" href="style.css" />
+    <script type="module" src="src/main.js"></script>
     <style>
       .honey { color: #f4c430; }
     </style>
@@ -137,8 +137,8 @@
             <img src="/media/projects/charger-1.webp" alt="Hypercharger Willkommensbildschirm" loading="lazy" />
           </figure>
           <div class="shot-row cols-2">
-            <figure class="shot"><img src="/media/projects/charger-2.webp" alt="Hypercharger — Ladevorgang" loading="lazy" /></figure>
-            <figure class="shot"><img src="/media/projects/charger-3.webp" alt="Hypercharger — weiterer Screen" loading="lazy" /></figure>
+            <figure class="shot"><img :src="`${import.meta.env.BASE_URL}media/projects/charger.jpg`" /></figure>
+            <figure class="shot"><img :src="`${import.meta.env.BASE_URL}media/projects/charger-3.webp`" alt="Hypercharger — weiterer Screen" loading="lazy" /></figure>
           </div>
         </article>
 
@@ -157,8 +157,8 @@
           </p>
           <a class="project-link mono" href="https://escape-game-informatik.umwelt-campus.de/" target="_blank" rel="noopener" data-en="Code on GitHub ↗">Code auf GitHub ↗</a>
           <div class="shot-row cols-2">
-            <figure class="shot"><img src="/media/projects/escape-1.png" alt="Escape Room - Startbildschirm" loading="lazy" /></figure>
-            <figure class="shot"><img src="/media/projects/escape-2.png" alt="Escape Room — 2.ter Raum" loading="lazy" /></figure>
+            <figure class="shot"><img src="media/projects/escape-1.png" alt="Escape Room - Startbildschirm" loading="lazy" /></figure>
+            <figure class="shot"><img src="media/projects/escape-2.png" alt="Escape Room — 2.ter Raum" loading="lazy" /></figure>
           </div>
         </article>
 
@@ -176,10 +176,10 @@
             Figma-Prototyp und Usability-Tests mit SUS-Auswertung. Mehrsprachig, für Tourismus in Südtirol.
           </p>
           <div class="shot-row cols-4" style="margin-top: 30px">
-            <figure class="shot shot-tall"><img src="/media/projects/checkin-01.webp" alt="Willkommensscreen" loading="lazy" /></figure>
-            <figure class="shot shot-tall"><img src="/media/projects/checkin-06.webp" alt="Ausweis scannen" loading="lazy" /></figure>
-            <figure class="shot shot-tall"><img src="/media/projects/checkin-08.webp" alt="Gesicht scannen" loading="lazy" /></figure>
-            <figure class="shot shot-tall"><img src="/media/projects/checkin-11.webp" alt="Zimmernummer" loading="lazy" /></figure>
+            <figure class="shot shot-tall"><img src="media/projects/checkin-01.webp" alt="Willkommensscreen" loading="lazy" /></figure>
+            <figure class="shot shot-tall"><img src="media/projects/checkin-06.webp" alt="Ausweis scannen" loading="lazy" /></figure>
+            <figure class="shot shot-tall"><img src="media/projects/checkin-08.webp" alt="Gesicht scannen" loading="lazy" /></figure>
+            <figure class="shot shot-tall"><img src="media/projects/checkin-11.webp" alt="Zimmernummer" loading="lazy" /></figure>
           </div>
         </article>
 
