@@ -120,7 +120,10 @@ section { padding-block: clamp(64px, 12vw, 130px); }
 .fill { color: var(--accent) !important; border-bottom-style: dashed !important; }
 
 /* ---------- work / projects ---------- */
-.project { padding-block: clamp(48px, 8vw, 88px); border-top: 1px solid var(--line); }
+.project { padding-block: clamp(48px, 8vw, 88px); border-top: 1px solid var(--line); scroll-margin-top: 84px; border-radius: 14px; }
+/* brief highlight when jumped to from a skill chip */
+.project.flash { animation: project-flash 1.5s var(--ease); }
+@keyframes project-flash { 0% { background: var(--accent-soft); } 100% { background: transparent; } }
 .project:first-of-type { border-top: none; padding-top: 0; }
 .project-head { display: flex; align-items: baseline; justify-content: space-between; gap: 20px; flex-wrap: wrap; }
 .project-head > div { display: flex; align-items: baseline; gap: 14px; }
@@ -171,6 +174,7 @@ section { padding-block: clamp(64px, 12vw, 130px); }
   border: 1px solid var(--line); border-radius: 999px; background: var(--paper-2);
   transition: transform 0.25s var(--ease), border-color 0.25s var(--ease), background 0.25s var(--ease), color 0.25s var(--ease);
 }
+.chips li[data-jump] { cursor: pointer; }
 @media (hover: hover) {
   .chips li:hover { transform: translateY(-3px); border-color: var(--accent); color: var(--accent); background: var(--accent-soft); }
 }

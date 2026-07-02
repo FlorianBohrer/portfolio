@@ -182,3 +182,23 @@ if ("IntersectionObserver" in window && navLinks.size) {
   // failsafe: never leave anything hidden, even if the observer misbehaves
   setTimeout(() => targets.forEach((el) => el.classList.remove("pre")), 2500);
 })();
+
+/* ---------- click a skill → jump to the related project (+ brief highlight) ---------- */
+(() => {
+  const behavior = window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth";
+  document.querySelectorAll("[data-jump]").forEach((chip) => {
+    const jump = () => {
+      const target = document.getElementById(chip.dataset.jump);
+      if (!target) return;
+      target.scrollIntoView({ behavior, block: "start" });
+      target.classList.remove("flash");
+      void target.offsetWidth; // restart the highlight animation
+      target.classList.add("flash");
+      setTimeout(() => target.classList.remove("flash"), 1500);
+    };
+    chip.addEventListener("click", jump);
+    chip.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") { e.preventDefault(); jump(); }
+    });
+  });
+})();
