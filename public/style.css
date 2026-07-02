@@ -6,16 +6,16 @@
 
 :root {
   /* warm editorial palette — cream paper, warm charcoal ink, terracotta accent, honey highlight */
-  --paper: oklch(96.8% 0.008 78);
+  --paper: oklch(74.089% 0.21526 137.226);
   --paper-2: oklch(94.2% 0.01 76);
   --paper-3: oklch(91.4% 0.012 74);
-  --ink: oklch(28.373% 0.01927 185.376);
-  --ink-2: oklch(48.197% 0.02047 164.123);
+  --ink: oklch(70.355% 0.19916 147.847);
+  --ink-2: oklch(70.098% 0.16828 154.446);
   --ink-3: oklch(60.5% 0.012 54);
-  --line: oklch(33% 0.03 48 / 0.15);
-  --line-2: oklch(33% 0.03 48 / 0.07);
+  --line: oklch(77.009% 0.26107 142.469 / 0.15);
+  --line-2: oklch(49.081% 0.14434 143.139 / 0.785);
   --accent: oklch(51% 0.135 42);
-  --accent-soft: oklch(51% 0.135 42 / 0.12);
+  --accent-soft: oklch(79.211% 0.26517 142.57 / 0.99);
   --honey: oklch(84% 0.12 84);
   --shadow-warm: oklch(30% 0.04 48 / 0.09);
 
