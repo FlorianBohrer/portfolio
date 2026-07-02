@@ -158,7 +158,7 @@ if ("IntersectionObserver" in window && navLinks.size) {
   const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const targets = [
     ...document.querySelectorAll(
-      ".section-label, .project-head, .project-desc, .shot, .about-grid, .big-mail, .contact-links"
+      ".section-label, .project-head, .project-desc, .shot, .about-grid, .big-mail, .contact-links, .skill-group h3, .chips li"
     ),
   ];
   targets.forEach((el) => el.classList.add("reveal"));
