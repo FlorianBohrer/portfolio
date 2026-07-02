@@ -2,6 +2,39 @@
 const yearEl = document.getElementById("year");
 if (yearEl) yearEl.textContent = new Date().getFullYear();
 
+/* ---------- theme: optional dark mode (persisted, follows the OS, pretty crossfade) ---------- */
+const THEME_KEY = "theme";
+const prefersDark = window.matchMedia("(prefers-color-scheme: dark)");
+const themeColorMeta = document.querySelector('meta[name="theme-color"]');
+
+function resolvedTheme() {
+  return localStorage.getItem(THEME_KEY) || (prefersDark.matches ? "dark" : "light");
+}
+function applyTheme(t) {
+  document.documentElement.dataset.theme = t;
+  if (themeColorMeta) themeColorMeta.content = t === "dark" ? "#181510" : "#f4f0e8";
+  document
+    .querySelectorAll(".theme-toggle")
+    .forEach((b) => b.setAttribute("aria-pressed", String(t === "dark")));
+  window.dispatchEvent(new CustomEvent("themechange", { detail: t }));
+}
+applyTheme(resolvedTheme());
+
+document.querySelectorAll(".theme-toggle").forEach((btn) =>
+  btn.addEventListener("click", () => {
+    const next = document.documentElement.dataset.theme === "dark" ? "light" : "dark";
+    localStorage.setItem(THEME_KEY, next);
+    const swap = () => applyTheme(next);
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (document.startViewTransition && !reduce) document.startViewTransition(swap);
+    else swap();
+  })
+);
+// keep following the OS setting until the user explicitly picks a theme
+prefersDark.addEventListener("change", () => {
+  if (!localStorage.getItem(THEME_KEY)) applyTheme(resolvedTheme());
+});
+
 /* ---------- language toggle (DE / EN) ---------- */
 let lang = localStorage.getItem("lang") === "en" ? "en" : "de";
 
@@ -45,11 +78,16 @@ setInterval(tickClock, 20000);
   const ctx = canvas.getContext("2d", { alpha: false });
   const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  // rgb approximations of the warm OKLCH palette
-  const PAPER = [244, 240, 231];
-  const INK = [46, 39, 33];
-  const ACCENT = [176, 98, 60]; // terracotta
-  const HONEY = [230, 190, 92];
+  // rgb palettes per theme (approximate the OKLCH tokens); swapped on theme change
+  let PAPER, INK, ACCENT, HONEY;
+  function setPalette() {
+    const dark = document.documentElement.dataset.theme === "dark";
+    PAPER = dark ? [24, 21, 16] : [244, 240, 231];
+    INK = dark ? [238, 232, 222] : [46, 39, 33];
+    ACCENT = dark ? [214, 132, 90] : [176, 98, 60];
+    HONEY = dark ? [235, 196, 104] : [230, 190, 92];
+  }
+  setPalette();
 
   let W = 0, H = 0, DPR = 1, running = false, raf = 0;
   const mouse = { x: -9999, y: -9999, active: false };
@@ -108,6 +146,11 @@ setInterval(tickClock, 20000);
 
   resize();
   window.addEventListener("resize", resize, { passive: true });
+  window.addEventListener("themechange", () => {
+    setPalette();
+    resize(); // repaint the base colour immediately
+    if (reduce) draw(2000); // static mode redraws once; animated mode picks it up next frame
+  });
   window.addEventListener("pointermove", (e) => {
     mouse.x = e.clientX;
     mouse.y = e.clientY - canvas.getBoundingClientRect().top;
@@ -158,7 +201,7 @@ if ("IntersectionObserver" in window && navLinks.size) {
   const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const targets = [
     ...document.querySelectorAll(
-      ".section-label, .project-head, .project-desc, .shot, .about-grid, .big-mail, .contact-links, .skill-group h3, .chips li"
+      ".section-label, .project-head, .project-desc, .shot, .about-grid, .big-mail, .contact-links, .skill-group"
     ),
   ];
   targets.forEach((el) => el.classList.add("reveal"));
