@@ -201,7 +201,7 @@ if ("IntersectionObserver" in window && navLinks.size) {
   const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const targets = [
     ...document.querySelectorAll(
-      ".section-label, .project-head, .project-desc, .shot, .about-grid, .big-mail, .contact-links, .skill-group"
+      ".section-label, .project-head, .project-desc, .shot, .about-grid, .big-mail, .contact-links, .skill-group, .focus-row"
     ),
   ];
   targets.forEach((el) => el.classList.add("reveal"));
@@ -244,4 +244,86 @@ if ("IntersectionObserver" in window && navLinks.size) {
       if (e.key === "Enter" || e.key === " ") { e.preventDefault(); jump(); }
     });
   });
+})();
+
+/* ---------- focus demo · rotating wireframe icosahedron (pure canvas, no libs) ---------- */
+(() => {
+  const canvas = document.querySelector(".ico");
+  if (!canvas) return;
+  const ctx = canvas.getContext("2d");
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const stroke = getComputedStyle(canvas).getPropertyValue("--g").trim() || "oklch(62% 0.15 42)";
+
+  const PHI = (1 + Math.sqrt(5)) / 2;
+  // 12 vertices = cyclic permutations of (0, ±1, ±φ)
+  const V = [
+    [0, 1, PHI], [0, 1, -PHI], [0, -1, PHI], [0, -1, -PHI],
+    [1, PHI, 0], [1, -PHI, 0], [-1, PHI, 0], [-1, -PHI, 0],
+    [PHI, 0, 1], [PHI, 0, -1], [-PHI, 0, 1], [-PHI, 0, -1],
+  ];
+  // 30 edges = vertex pairs at squared distance 4
+  const E = [];
+  for (let i = 0; i < 12; i++)
+    for (let j = i + 1; j < 12; j++) {
+      const dx = V[i][0] - V[j][0], dy = V[i][1] - V[j][1], dz = V[i][2] - V[j][2];
+      if (Math.abs(dx * dx + dy * dy + dz * dz - 4) < 1e-3) E.push([i, j]);
+    }
+
+  let W = 0, H = 0, DPR = 1, raf = 0, running = false, t0 = 0;
+
+  function resize() {
+    DPR = Math.min(2, window.devicePixelRatio || 1);
+    W = canvas.clientWidth || 260;
+    H = canvas.clientHeight || Math.round(W * 0.667);
+    canvas.width = Math.round(W * DPR);
+    canvas.height = Math.round(H * DPR);
+    ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+  }
+
+  function render(ax, ay) {
+    ctx.clearRect(0, 0, W, H);
+    const cx = W / 2, cy = H / 2, R = Math.min(W, H) * 0.34;
+    const sx = Math.sin(ax), cxr = Math.cos(ax), sy = Math.sin(ay), cyr = Math.cos(ay);
+    const pts = V.map(([x, y, z]) => {
+      const x1 = x * cyr - z * sy, z1 = x * sy + z * cyr; // rotate Y
+      const y2 = y * cxr - z1 * sx, z2 = y * sx + z1 * cxr; // rotate X
+      const p = 3 / (3 + z2); // perspective
+      return [cx + x1 * R * p, cy + y2 * R * p, z2];
+    });
+    ctx.lineCap = "round";
+    ctx.strokeStyle = stroke;
+    for (const [i, j] of E) {
+      const za = (pts[i][2] + pts[j][2]) / 2;
+      ctx.globalAlpha = 0.26 + 0.62 * ((za + 2) / 4); // far edges fainter
+      ctx.lineWidth = 1.3;
+      ctx.beginPath();
+      ctx.moveTo(pts[i][0], pts[i][1]);
+      ctx.lineTo(pts[j][0], pts[j][1]);
+      ctx.stroke();
+    }
+    ctx.globalAlpha = 1;
+    ctx.fillStyle = stroke;
+    for (const p of pts) { ctx.beginPath(); ctx.arc(p[0], p[1], 1.7, 0, 6.29); ctx.fill(); }
+  }
+
+  function frame(t) {
+    if (!t0) t0 = t;
+    const a = (t - t0) * 0.00042;
+    render(a * 0.62, a);
+    if (running) raf = requestAnimationFrame(frame);
+  }
+
+  const start = () => { if (!running && !reduce) { running = true; t0 = 0; raf = requestAnimationFrame(frame); } };
+  const stop = () => { running = false; cancelAnimationFrame(raf); };
+
+  resize();
+  window.addEventListener("resize", () => { resize(); if (reduce) render(0.5, 0.75); }, { passive: true });
+  document.addEventListener("visibilitychange", () => (document.hidden ? stop() : start()));
+  if (reduce) {
+    render(0.5, 0.75);
+  } else if ("IntersectionObserver" in window) {
+    new IntersectionObserver(([e]) => (e.isIntersecting ? start() : stop()), { threshold: 0 }).observe(canvas);
+  } else {
+    start();
+  }
 })();

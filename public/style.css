@@ -126,7 +126,7 @@ section { padding-block: clamp(64px, 12vw, 130px); }
 
 .section-label {
   display: flex; align-items: center; justify-content: space-between;
-  font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-3);
+  font-size: 32px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-3);
   padding-bottom: 20px; margin-bottom: clamp(40px, 7vw, 72px);
   border-bottom: 1px solid var(--line);
 }
@@ -134,8 +134,8 @@ section { padding-block: clamp(64px, 12vw, 130px); }
 /* ---------- intro ---------- */
 .eyebrow { font-size: 12.5px; letter-spacing: 0.02em; color: var(--ink-3); margin-bottom: 26px; }
 .intro h1 {
-  font-size: clamp(1.7rem, 3.9vw, 2.65rem); font-weight: 500; line-height: 1.18;
-  letter-spacing: -0.025em; max-width: 20ch; color: var(--ink);
+  font-size: clamp(1.95rem, 4.9vw, 3.5rem); font-weight: 600; line-height: 1.08;
+  letter-spacing: -0.032em; max-width: 22ch; color: var(--ink); text-wrap: balance;
 }
 .intro-bio { margin-top: 28px; max-width: 54ch; }
 .intro-bio p { color: var(--ink-2); font-size: clamp(1rem, 1.4vw, 1.12rem); }
@@ -146,6 +146,77 @@ section { padding-block: clamp(64px, 12vw, 130px); }
 .status .dot { width: 7px; height: 7px; border-radius: 50%; background: oklch(62% 0.17 150); box-shadow: 0 0 0 3px oklch(62% 0.17 150 / 0.16); }
 
 .fill { color: #40dc9e !important; border-bottom-style: dashed !important; }
+
+/* ---------- premium grain (subtle tactile texture) ---------- */
+body::after {
+  content: ""; position: fixed; inset: 0; z-index: 100; pointer-events: none; opacity: 0.04;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+[data-theme="dark"] body::after { opacity: 0.055; }
+
+/* ---------- focus · "show, don't tell" showcase ----------
+ * Hallmark · component: focus-section · genre: editorial · pre-emit critique: P5 H5 E5 S5 R4 V5
+ * Each row demonstrates the skill it names (rotating 3D cube · live data graph · perf gauge). */
+.focus { padding-block: clamp(48px, 8vw, 100px); }
+.focus-head { border-top: 1px solid var(--line); padding-top: clamp(28px, 4vw, 44px); max-width: 44ch; }
+.focus-kicker { font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-3); margin-bottom: 16px; }
+.focus-lead { font-size: clamp(1.5rem, 3.6vw, 2.5rem); font-weight: 600; line-height: 1.12; letter-spacing: -0.028em; color: var(--ink); text-wrap: balance; }
+.focus-lead em { font-style: normal; }
+
+.focus-rows { list-style: none; margin-top: clamp(36px, 6vw, 76px); display: grid; gap: clamp(30px, 5vw, 68px); }
+.focus-row {
+  --g: var(--accent);
+  display: grid; grid-template-columns: minmax(0, 340px) 1fr; gap: clamp(24px, 4vw, 56px); align-items: center;
+}
+.focus-row:nth-child(even) { grid-template-columns: 1fr minmax(0, 340px); }
+.focus-row:nth-child(even) .focus-demo { order: 2; }
+.focus-row:nth-child(2).reveal.in { animation-delay: 0.08s; }
+.focus-row:nth-child(3).reveal.in { animation-delay: 0.16s; }
+
+/* demo panel */
+.focus-demo {
+  position: relative; aspect-ratio: 16 / 11; border-radius: 18px; overflow: hidden;
+  border: 1px solid color-mix(in oklch, var(--g) 26%, var(--line));
+  background: radial-gradient(120% 90% at 50% 10%, color-mix(in oklch, var(--g) 10%, transparent), transparent 60%), var(--paper-2);
+  display: grid; place-items: center;
+  box-shadow: 0 1px 2px var(--shadow-warm), 0 22px 48px oklch(30% 0.04 48 / 0.08);
+}
+.demo-glow { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 58%; aspect-ratio: 1; border-radius: 50%; filter: blur(40px); background: color-mix(in oklch, var(--g) 42%, transparent); opacity: 0.38; }
+.demo-tag { position: absolute; left: 12px; bottom: 10px; font-size: 10.5px; letter-spacing: 0.03em; color: color-mix(in oklch, var(--g) 68%, var(--ink-3)); }
+
+/* copy */
+.focus-copy { position: relative; }
+.focus-num { display: block; font-size: clamp(2.6rem, 6vw, 4.4rem); font-weight: 500; line-height: 0.85; letter-spacing: -0.03em; color: color-mix(in oklch, var(--g) 86%, transparent); margin-bottom: 8px; }
+.focus-copy h3 { font-size: clamp(1.4rem, 2.8vw, 2.05rem); font-weight: 600; letter-spacing: -0.025em; }
+.focus-copy p { margin-top: 12px; color: var(--ink-2); font-size: clamp(1rem, 1.3vw, 1.1rem); line-height: 1.6; max-width: 42ch; }
+
+/* demo 1 · rotating wireframe icosahedron (drawn on <canvas> in main.js) */
+.ico { display: block; width: 84%; max-width: 272px; height: auto; }
+
+/* demo 2 · node graph with flowing data */
+.demo-graph svg { width: 80%; max-width: 240px; overflow: visible; }
+.demo-graph .edge { fill: none; stroke: var(--g); stroke-width: 1.6; stroke-dasharray: 4 7; opacity: 0.7; animation: dataflow 1.5s linear infinite; }
+.demo-graph .node { fill: var(--paper-2); stroke: var(--g); stroke-width: 1.6; }
+.demo-graph .hub { fill: color-mix(in oklch, var(--g) 28%, var(--paper-2)); animation: hub-pulse 2.4s ease-in-out infinite; }
+@keyframes dataflow { to { stroke-dashoffset: -22; } }
+@keyframes hub-pulse { 0%, 100% { r: 9; } 50% { r: 10.6; } }
+
+/* demo 3 · performance gauge */
+.demo-gauge svg { width: 58%; max-width: 132px; }
+.demo-gauge .track { fill: none; stroke: var(--line); stroke-width: 8; }
+.demo-gauge .arc { fill: none; stroke: var(--g); stroke-width: 8; stroke-linecap: round; stroke-dasharray: 289; stroke-dashoffset: 289; animation: gauge-fill 2.8s var(--ease) infinite alternate; }
+@keyframes gauge-fill { to { stroke-dashoffset: 66; } }
+.gauge-label { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 22px; font-weight: 600; letter-spacing: -0.02em; color: var(--ink); }
+.gauge-label small { font-size: 10px; color: var(--ink-3); margin-left: 1px; }
+
+@media (max-width: 720px) {
+  .focus-row, .focus-row:nth-child(even) { grid-template-columns: 1fr; gap: 18px; }
+  .focus-row:nth-child(even) .focus-demo { order: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .demo-graph .edge, .demo-graph .hub, .demo-gauge .arc { animation: none; }
+  .demo-gauge .arc { stroke-dashoffset: 66; }
+}
 
 /* ---------- work / projects ---------- */
 .project { padding-block: clamp(48px, 8vw, 88px); border-top: 1px solid var(--line); scroll-margin-top: 84px; border-radius: 14px; }
@@ -185,8 +256,7 @@ section { padding-block: clamp(64px, 12vw, 130px); }
 /* ---------- about ---------- */
 .about-grid { display: grid; grid-template-columns: 200px 1fr; gap: clamp(28px, 5vw, 56px); align-items: start; }
 .portrait { margin: 0; border: 1px solid var(--line); border-radius: 12px; overflow: hidden; box-shadow: 0 1px 2px var(--shadow-warm), 0 14px 30px oklch(30% 0.04 48 / 0.06); }
-.portrait img { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; object-position: 50% 22%; filter: grayscale(1) contrast(1.03); transition: filter 0.5s var(--ease); }
-.portrait:hover img { filter: none; }
+.portrait img { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; object-position: 50% 22%; transition: filter 0.5s var(--ease); }
 .about-text p { color: var(--ink-2); font-size: clamp(1rem, 1.3vw, 1.1rem); max-width: 58ch; }
 .about-text p + p { margin-top: 16px; }
 .cv-list { margin-top: 30px; border-top: 1px solid var(--line); font-size: 13px; }
