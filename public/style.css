@@ -230,7 +230,7 @@ body::after {
 .project-head h2 { font-size: clamp(1.25rem, 2.4vw, 1.7rem); font-weight: 600; letter-spacing: -0.02em; }
 .project-meta { font-size: 12px; color: var(--ink-3); letter-spacing: 0.01em; }
 .project-desc { margin-top: 16px; max-width: 62ch; color: var(--ink-2); font-size: clamp(0.98rem, 1.3vw, 1.08rem); }
-.project-link { display: inline-block; margin-top: 16px; font-size: 12.5px; color: var(--accent); border-bottom: 1px solid var(--accent-soft); padding-bottom: 2px; transition: border-color 0.2s var(--ease); }
+.project-link { display: inline-block; margin-top: 16px; font-size: 17.5px; color: var(--accent); border-bottom: 1px solid var(--accent-soft); padding-bottom: 2px; transition: border-color 0.2s var(--ease); }
 .project-link:hover { border-color: var(--accent); }
 
 .shot {
@@ -251,6 +251,12 @@ body::after {
 @media (hover: hover) {
   .shot:hover { transform: translateY(-4px); box-shadow: 0 2px 4px var(--shadow-warm), 0 26px 48px oklch(30% 0.04 48 / 0.12); }
   .shot:hover img { transform: scale(1.045); }
+}
+
+
+.shot2 {
+  margin: 0; border: 1px solid var(--line); border-radius: 12px; overflow: hidden; background: var(--paper-2);
+  box-shadow: 0 1px 2px var(--shadow-warm), 0 26px 44px oklch(30% 0.04 48 / 0.07);
 }
 
 /* ---------- about ---------- */
