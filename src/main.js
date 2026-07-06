@@ -328,3 +328,62 @@ if ("IntersectionObserver" in window && navLinks.size) {
     start();
   }
 })();
+
+/* ---------- 3D tilt + glare on screenshots, magnetic hover on links (fine pointers only) ---------- */
+(() => {
+  const fine = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (!fine || reduce) return;
+
+  /* screenshots tilt toward the cursor, with a soft glare that follows it */
+  document.querySelectorAll(".shot").forEach((shot) => {
+    const glare = document.createElement("span");
+    glare.className = "glare";
+    glare.setAttribute("aria-hidden", "true");
+    shot.appendChild(glare);
+    let raf = 0, rx = 0, ry = 0, hover = false;
+    const render = () => {
+      raf = 0;
+      shot.style.transform = hover
+        ? `perspective(900px) translateY(-4px) rotateX(${rx}deg) rotateY(${ry}deg)`
+        : "";
+    };
+    const queue = () => { if (!raf) raf = requestAnimationFrame(render); };
+    shot.addEventListener("pointerenter", () => { hover = true; shot.classList.add("tilting"); });
+    shot.addEventListener("pointermove", (e) => {
+      const r = shot.getBoundingClientRect();
+      const px = (e.clientX - r.left) / r.width;
+      const py = (e.clientY - r.top) / r.height;
+      ry = (px - 0.5) * 10;
+      rx = (0.5 - py) * 8;
+      shot.style.setProperty("--gx", `${px * 100}%`);
+      shot.style.setProperty("--gy", `${py * 100}%`);
+      queue();
+    });
+    shot.addEventListener("pointerleave", () => {
+      hover = false;
+      shot.classList.remove("tilting"); // stylesheet transition eases the spring-back
+      queue();
+    });
+  });
+
+  /* links and buttons lean toward the cursor while hovered */
+  document
+    .querySelectorAll(".project-link, .intro-links a, .contact-links a, .theme-toggle, .big-mail, .to-top")
+    .forEach((el) => {
+      el.classList.add("magnetic");
+      let raf = 0, mx = 0, my = 0;
+      const render = () => {
+        raf = 0;
+        el.style.transform = mx || my ? `translate(${mx.toFixed(1)}px, ${my.toFixed(1)}px)` : "";
+      };
+      const queue = () => { if (!raf) raf = requestAnimationFrame(render); };
+      el.addEventListener("pointermove", (e) => {
+        const r = el.getBoundingClientRect();
+        mx = (e.clientX - (r.left + r.width / 2)) * 0.22;
+        my = (e.clientY - (r.top + r.height / 2)) * 0.32;
+        queue();
+      });
+      el.addEventListener("pointerleave", () => { mx = my = 0; queue(); });
+    });
+})();
