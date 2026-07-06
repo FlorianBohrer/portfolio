@@ -4,7 +4,7 @@
   --paper: oklch(96.8% 0.008 78);
   --paper-2: oklch(94.2% 0.01 76);
   --paper-3: oklch(91.4% 0.012 74);
-    --ink: oklch(27% 0.016 52);
+  --ink: oklch(27% 0.016 52);
   --ink-2: oklch(47% 0.014 50);
   --ink-3: oklch(60.5% 0.012 54);
   --line: oklch(33% 0.03 48 / 0.15);
@@ -145,7 +145,7 @@ section { padding-block: clamp(64px, 12vw, 130px); }
 .status { display: inline-flex; align-items: center; gap: 9px; margin-top: 26px; font-size: 12.5px; color: var(--ink-2); }
 .status .dot { width: 7px; height: 7px; border-radius: 50%; background: oklch(62% 0.17 150); box-shadow: 0 0 0 3px oklch(62% 0.17 150 / 0.16); }
 
-.fill { color: #40dc9e !important; border-bottom-style: dashed !important; }
+.fill { color: var(--accent) !important; border-bottom-style: dashed !important; }
 
 /* ---------- premium grain (subtle tactile texture) ---------- */
 body::after {
