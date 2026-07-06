@@ -42,8 +42,9 @@ function applyLang(next) {
   lang = next;
   document.documentElement.lang = next;
   document.querySelectorAll("[data-en]").forEach((el) => {
-    if (el.dataset.de === undefined) el.dataset.de = el.textContent; // capture German once
-    el.textContent = next === "en" ? el.dataset.en : el.dataset.de;
+    if (el.dataset.de === undefined) el.dataset.de = el.innerHTML; // capture German once (keep inline markup like <br> and the honey span)
+    if (next === "en") el.textContent = el.dataset.en;
+    else el.innerHTML = el.dataset.de;
   });
   document.querySelectorAll(".lang-btn").forEach((b) =>
     b.classList.toggle("active", b.dataset.lang === next)
