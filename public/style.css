@@ -232,6 +232,8 @@ body::after {
 .project-desc { margin-top: 16px; max-width: 62ch; color: var(--ink-2); font-size: clamp(0.98rem, 1.3vw, 1.08rem); }
 .project-link { display: inline-block; margin-top: 16px; font-size: 17.5px; color: var(--accent); border-bottom: 1px solid var(--accent-soft); padding-bottom: 2px; transition: border-color 0.2s var(--ease); }
 .project-link:hover { border-color: var(--accent); }
+/* several links on one project sit in a row and wrap cleanly on narrow screens */
+.button-row { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 28px; }
 
 .shot {
   margin: 0; border: 1px solid var(--line); border-radius: 12px; overflow: hidden; background: var(--paper-2);
