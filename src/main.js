@@ -387,3 +387,106 @@ if ("IntersectionObserver" in window && navLinks.size) {
       el.addEventListener("pointerleave", () => { mx = my = 0; queue(); });
     });
 })();
+
+/* ---------- lightbox: view project shots full screen ---------- */
+(() => {
+  const shots = [...document.querySelectorAll(".shot img, .shot2 img")];
+  if (!shots.length || !HTMLDialogElement.prototype.showModal) return;
+
+  // navigate within the project you clicked in, not across the whole page
+  const groupOf = (img) => img.closest("article.project") || document;
+  const galleryFor = (img) => [...groupOf(img).querySelectorAll(".shot img, .shot2 img")];
+
+  const dlg = document.createElement("dialog");
+  dlg.className = "lightbox";
+  dlg.innerHTML = `
+    <div class="lb-stage">
+      <button class="lb-btn lb-close" type="button" aria-label="Schließen">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12"/></svg>
+      </button>
+      <div class="lb-frame">
+        <button class="lb-btn lb-nav lb-prev" type="button" aria-label="Vorheriges Bild">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>
+        </button>
+        <img class="lb-img" alt="" />
+        <button class="lb-btn lb-nav lb-next" type="button" aria-label="Nächstes Bild">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg>
+        </button>
+      </div>
+      <div class="lb-bar">
+        <p class="lb-cap"></p>
+        <span class="lb-count mono"></span>
+      </div>
+    </div>`;
+  document.body.appendChild(dlg);
+
+  const img = dlg.querySelector(".lb-img");
+  const cap = dlg.querySelector(".lb-cap");
+  const count = dlg.querySelector(".lb-count");
+  const prevBtn = dlg.querySelector(".lb-prev");
+  const nextBtn = dlg.querySelector(".lb-next");
+
+  let gallery = [], i = 0, opener = null;
+
+  function show(n) {
+    i = (n + gallery.length) % gallery.length;
+    const src = gallery[i];
+    img.src = src.currentSrc || src.src;
+    img.alt = src.alt || "";
+    cap.textContent = src.alt || "";
+    count.textContent = `${i + 1} / ${gallery.length}`;
+    const solo = gallery.length < 2;
+    prevBtn.hidden = nextBtn.hidden = solo;
+    count.hidden = solo;
+    [i + 1, i - 1].forEach((k) => { // warm the neighbours so paging feels instant
+      const nb = gallery[(k + gallery.length) % gallery.length];
+      if (nb) new Image().src = nb.currentSrc || nb.src;
+    });
+  }
+
+  function open(src) {
+    gallery = galleryFor(src);
+    opener = src;
+    show(gallery.indexOf(src));
+    dlg.showModal();
+    document.body.style.overflow = "hidden";
+    dlg.querySelector(".lb-close").focus();
+  }
+
+  shots.forEach((s) => {
+    s.addEventListener("click", () => open(s));
+    // the shots are plain <img>; give them a keyboard route in too
+    s.tabIndex = 0;
+    s.setAttribute("role", "button");
+    s.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") { e.preventDefault(); open(s); }
+    });
+  });
+
+  prevBtn.addEventListener("click", () => show(i - 1));
+  nextBtn.addEventListener("click", () => show(i + 1));
+  img.addEventListener("click", () => dlg.close());
+  dlg.querySelector(".lb-close").addEventListener("click", () => dlg.close());
+  dlg.addEventListener("click", (e) => { if (e.target === dlg || e.target.classList.contains("lb-frame")) dlg.close(); });
+
+  dlg.addEventListener("keydown", (e) => {
+    if (e.key === "ArrowRight") { e.preventDefault(); show(i + 1); }
+    else if (e.key === "ArrowLeft") { e.preventDefault(); show(i - 1); }
+  });
+
+  // swipe between shots on touch
+  let x0 = null;
+  dlg.addEventListener("pointerdown", (e) => { if (e.pointerType !== "mouse") x0 = e.clientX; });
+  dlg.addEventListener("pointerup", (e) => {
+    if (x0 === null) return;
+    const dx = e.clientX - x0;
+    x0 = null;
+    if (Math.abs(dx) > 45) show(dx < 0 ? i + 1 : i - 1);
+  });
+
+  dlg.addEventListener("close", () => {
+    document.body.style.overflow = "";
+    img.removeAttribute("src");
+    opener?.focus(); // hand focus back to the shot that was opened
+  });
+})();
