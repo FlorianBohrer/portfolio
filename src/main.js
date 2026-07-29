@@ -411,15 +411,19 @@ if ("IntersectionObserver" in window && navLinks.size) {
   dlg.className = "lightbox";
   dlg.innerHTML = `
     <div class="lb-stage">
-      <button class="lb-btn lb-close" type="button" aria-label="Schließen">
+      <button class="lb-btn lb-full" type="button" aria-label="Vollbild" data-en-label="Full screen">
+        <svg class="i-expand" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 3H5a2 2 0 00-2 2v3m18 0V5a2 2 0 00-2-2h-3M3 16v3a2 2 0 002 2h3m8 0h3a2 2 0 002-2v-3"/></svg>
+        <svg class="i-compress" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 3v3a2 2 0 01-2 2H3m18 0h-3a2 2 0 01-2-2V3M3 16h3a2 2 0 012 2v3m8 0v-3a2 2 0 012-2h3"/></svg>
+      </button>
+      <button class="lb-btn lb-close" type="button" aria-label="Schließen" data-en-label="Close">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12"/></svg>
       </button>
       <div class="lb-frame">
-        <button class="lb-btn lb-nav lb-prev" type="button" aria-label="Vorheriges Bild">
+        <button class="lb-btn lb-nav lb-prev" type="button" aria-label="Vorheriges Bild" data-en-label="Previous image">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>
         </button>
         <img class="lb-img" alt="" />
-        <button class="lb-btn lb-nav lb-next" type="button" aria-label="Nächstes Bild">
+        <button class="lb-btn lb-nav lb-next" type="button" aria-label="Nächstes Bild" data-en-label="Next image">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg>
         </button>
       </div>
@@ -429,6 +433,7 @@ if ("IntersectionObserver" in window && navLinks.size) {
       </div>
     </div>`;
   document.body.appendChild(dlg);
+  applyLang(lang); // the overlay is built after the first pass, so localise its labels now
 
   const img = dlg.querySelector(".lb-img");
   const cap = dlg.querySelector(".lb-cap");
@@ -473,6 +478,30 @@ if ("IntersectionObserver" in window && navLinks.size) {
     });
   });
 
+  /* real full screen: the overlay alone still leaves the browser chrome in place */
+  const fullBtn = dlg.querySelector(".lb-full");
+  // Chrome rejects requestFullscreen() on <dialog> ("Dialog elements are invalid"),
+  // so the stage inside it goes full screen instead
+  const stage = dlg.querySelector(".lb-stage");
+  const reqFull = stage.requestFullscreen || stage.webkitRequestFullscreen;
+  const exitFull = document.exitFullscreen || document.webkitExitFullscreen;
+  const fullEl = () => document.fullscreenElement || document.webkitFullscreenElement;
+  if (!reqFull) fullBtn.hidden = true; // iOS Safari only does this for <video>
+
+  function toggleFull() {
+    if (!reqFull) return;
+    if (fullEl()) exitFull.call(document);
+    else reqFull.call(stage).catch(() => {}); // a denied request must not break paging
+  }
+  function syncFull() {
+    const on = !!fullEl();
+    dlg.classList.toggle("is-full", on);
+    fullBtn.setAttribute("aria-pressed", String(on));
+  }
+  fullBtn.addEventListener("click", toggleFull);
+  document.addEventListener("fullscreenchange", syncFull);
+  document.addEventListener("webkitfullscreenchange", syncFull);
+
   prevBtn.addEventListener("click", () => show(i - 1));
   nextBtn.addEventListener("click", () => show(i + 1));
   img.addEventListener("click", () => dlg.close());
@@ -482,6 +511,7 @@ if ("IntersectionObserver" in window && navLinks.size) {
   dlg.addEventListener("keydown", (e) => {
     if (e.key === "ArrowRight") { e.preventDefault(); show(i + 1); }
     else if (e.key === "ArrowLeft") { e.preventDefault(); show(i - 1); }
+    else if (e.key === "f" || e.key === "F") { e.preventDefault(); toggleFull(); }
   });
 
   // swipe between shots on touch
@@ -495,6 +525,7 @@ if ("IntersectionObserver" in window && navLinks.size) {
   });
 
   dlg.addEventListener("close", () => {
+    if (fullEl()) exitFull.call(document);
     document.body.style.overflow = "";
     img.removeAttribute("src");
     opener?.focus(); // hand focus back to the shot that was opened

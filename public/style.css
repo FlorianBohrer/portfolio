@@ -467,3 +467,11 @@ body::after {
   .lb-cap { order: 3; flex-basis: 100%; }
 }
 @media (prefers-reduced-motion: reduce) { .lb-img { animation: none; } }
+
+/* full-screen mode: the dialog itself becomes the fullscreen element, so it needs
+   its own opaque ground — ::backdrop no longer paints behind it */
+.lb-stage:fullscreen, .lb-stage:-webkit-full-screen { background: oklch(16% 0.014 55); }
+.lb-full { position: absolute; top: max(14px, env(safe-area-inset-top)); right: 66px; z-index: 2; }
+.lb-full .i-compress { display: none; }
+.lightbox.is-full .lb-full .i-expand { display: none; }
+.lightbox.is-full .lb-full .i-compress { display: block; }
