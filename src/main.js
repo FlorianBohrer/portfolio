@@ -46,6 +46,16 @@ function applyLang(next) {
     if (next === "en") el.textContent = el.dataset.en;
     else el.innerHTML = el.dataset.de;
   });
+  // alt text and aria-labels are content too — leaving them German in EN mode
+  // strands exactly the screen-reader users the rest of the page caters to
+  document.querySelectorAll("[data-en-alt]").forEach((el) => {
+    if (el.dataset.deAlt === undefined) el.dataset.deAlt = el.alt;
+    el.alt = next === "en" ? el.dataset.enAlt : el.dataset.deAlt;
+  });
+  document.querySelectorAll("[data-en-label]").forEach((el) => {
+    if (el.dataset.deLabel === undefined) el.dataset.deLabel = el.getAttribute("aria-label");
+    el.setAttribute("aria-label", next === "en" ? el.dataset.enLabel : el.dataset.deLabel);
+  });
   document.querySelectorAll(".lang-btn").forEach((b) =>
     b.classList.toggle("active", b.dataset.lang === next)
   );

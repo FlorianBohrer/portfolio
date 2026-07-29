@@ -43,16 +43,16 @@
     <canvas id="hero-bg" aria-hidden="true"></canvas>
     <header class="topbar">
       <a href="#top" class="wordmark">Florian Bohrer</a>
-      <nav class="topnav mono" aria-label="Primär">
+      <nav class="topnav mono" aria-label="Primär" data-en-label="Primary">
         <a href="#work" data-en="Work">Arbeiten</a>
         <a href="#skills" data-en="Skills">Skills</a>
         <a href="#about" data-en="About">Über</a>
         <a href="mailto:florianbohrer@yahoo.com" class="mail">Email</a>
-        <span class="lang" role="group" aria-label="Sprache">
+        <span class="lang" role="group" aria-label="Sprache" data-en-label="Language">
           <button type="button" class="lang-btn" data-lang="de">DE</button>
           <button type="button" class="lang-btn" data-lang="en">EN</button>
         </span>
-        <button type="button" class="theme-toggle" aria-label="Dark Mode umschalten" aria-pressed="false" title="Theme wechseln">
+        <button type="button" class="theme-toggle" aria-label="Dark Mode umschalten" data-en-label="Toggle dark mode" aria-pressed="false" title="Theme wechseln">
           <svg class="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
           <svg class="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
         </button>
@@ -174,28 +174,49 @@
           </p>
           <a class="project-link mono" href="https://github.com/FlorianBohrer/IoT-Smart-Hive-traningsplatform" target="_blank" rel="noopener" data-en="Code on GitHub ↗">Code auf GitHub ↗</a>
           <figure class="shot shot-primary">
-            <img src="media/projects/arhive/arhive-4.webp" alt="Sensorübersicht der Website" loading="lazy" />
+            <img src="media/projects/arhive/arhive-4.webp" alt="AR Hive — Startseite mit Einstieg in den IoT-Bienenstock" data-en-alt="AR Hive — home page introducing the IoT beehive" loading="lazy" />
           </figure>
 
           <div class="shot-row cols-2">
-                <figure class="shot"><img src="media/projects/arhive/arhive-3.webp" alt="AR Hive Website — Startseite" loading="lazy" /></figure> 
-               <figure class="shot"><img src="media/projects/arhive/arhive-7.webp" alt="AR Hive Website — Startseite" loading="lazy" /></figure> 
+                <figure class="shot"><img src="media/projects/arhive/arhive-3.webp" alt="AR Hive — Sensorübersicht mit Einbauschema am Bienenstock" data-en-alt="AR Hive — sensor overview with the hive installation diagram" loading="lazy" /></figure> 
+               <figure class="shot"><img src="media/projects/arhive/arhive-7.webp" alt="AR Hive — Kursübersicht mit Kursen und Quizzen" data-en-alt="AR Hive — course catalogue with courses and quizzes" loading="lazy" /></figure> 
 
           </div>
           
           <div class="shot-row cols-2">
-            <figure class="shot"><img src="media/projects/arhive/arhive-1.webp" alt="AR-Dashboard mit Live-Sensordaten (HoloLens 2)" loading="lazy" /></figure>
-            <figure class="shot"><img src="media/projects/arhive/arhive-2.webp" alt="AR-Controller-Panel" loading="lazy" /></figure>
+            <figure class="shot"><img src="media/projects/arhive/arhive-1.webp" alt="AR-Dashboard mit Live-Sensordaten (HoloLens 2)" data-en-alt="AR dashboard showing live sensor data (HoloLens 2)" loading="lazy" /></figure>
+            <figure class="shot"><img src="media/projects/arhive/arhive-2.webp" alt="AR-Controller-Panel zur Steuerung des Bienenstocks" data-en-alt="AR controller panel for operating the hive" loading="lazy" /></figure>
           </div>
         </article>
 
-
-
-        <!-- 02 Hypercharger -->
-        <article class="project" id="p-hypercharger">
+        <!-- 02 Task App -->
+        <article class="project" id="p-taskapp">
           <header class="project-head">
             <div>
               <span class="idx mono">02</span>
+              <h2 data-en="Task App — fullstack product">Task-App — Fullstack-Produkt</h2>
+            </div>
+            <span class="project-meta mono" data-en="2025 · Personal product · Angular · NestJS · Signals · Tailwind · Vercel">2025 · Eigenes Produkt · Angular · NestJS · Signals · Tailwind · Vercel</span>
+          </header>
+          <p class="project-desc" data-en="A task manager I built end to end, from the API to the interface: an Angular frontend with signal-based state management and Tailwind, backed by a NestJS REST API serving tasks, folders and categories. The core logic is covered by unit tests, and every push deploys to Vercel.">
+            Ein Task-Manager, den ich von der API bis zum Interface selbst gebaut habe: Angular-Frontend
+            mit signalbasiertem State-Management und Tailwind, dahinter ein NestJS-Backend, das Aufgaben,
+            Ordner und Kategorien über eine REST-API bereitstellt. Die Kernlogik ist mit Unit-Tests
+            abgesichert, deployed wird bei jedem Push über Vercel.
+          </p>
+          <a class="project-link mono" href="https://github.com/FlorianBohrer/Todo_App" target="_blank" rel="noopener" data-en="Code on GitHub ↗">Code auf GitHub ↗</a>
+          <div class="shot-row cols-2">
+            <figure class="shot"><img src="media/projects/todo/todo-1.webp" alt="Task-App — Übersicht aller Aufgaben" data-en-alt="Task app — overview of all tasks" loading="lazy" /></figure>
+            <figure class="shot"><img src="media/projects/todo/todo-2.webp" alt="Task-App — Ordner und Kategorien" data-en-alt="Task app — folders and categories" loading="lazy" /></figure>
+          </div>
+         
+        </article>
+
+        <!-- 03 Hypercharger -->
+        <article class="project" id="p-hypercharger">
+          <header class="project-head">
+            <div>
+              <span class="idx mono">03</span>
               <h2 data-en="Hypercharger — Charging Station UI">Hypercharger — Ladesäulen-Interface</h2>
             </div>
             <span class="project-meta mono" data-en="2025 · Concept & UI · Vue · CSS/SVG">2025 · Konzept &amp; UI · Vue · CSS/SVG</span>
@@ -207,19 +228,20 @@
           </p>
           <a class="project-link mono" href="https://github.com/FlorianBohrer/charger-interface-demo" target="_blank" rel="noopener" data-en="Code on GitHub ↗">Code auf GitHub ↗</a>
           <figure class="shot shot-primary">
-            <img src="media/projects/charger/charger-1.png" alt="Hypercharger Willkommensbildschirm" loading="lazy" />
+            <img src="media/projects/charger/charger-1.png" alt="Hypercharger — Willkommensbildschirm" data-en-alt="Hypercharger — welcome screen" loading="lazy" />
           </figure>
           <div class="shot-row cols-3">
-            <figure class="shot"><img src="media/projects/charger/charger-2.png" alt="Hypercharger Authentifizierung" loading="lazy" /></figure>
-            <figure class="shot"><img src="media/projects/charger/charger-3.png" alt="Hypercharger Ladeübersicht" loading="lazy" /></figure>
-            <figure class="shot"><img src="media/projects/charger/charger-4.png" alt="Hypercharger Ladeübersicht (Dark Mode)" loading="lazy" /></figure>
+            <figure class="shot"><img src="media/projects/charger/charger-2.png" alt="Hypercharger — Authentifizierung" data-en-alt="Hypercharger — authentication" loading="lazy" /></figure>
+            <figure class="shot"><img src="media/projects/charger/charger-3.png" alt="Hypercharger — Ladeübersicht" data-en-alt="Hypercharger — charging overview" loading="lazy" /></figure>
+            <figure class="shot"><img src="media/projects/charger/charger-4.png" alt="Hypercharger — Ladeübersicht im Dark Mode" data-en-alt="Hypercharger — charging overview in dark mode" loading="lazy" /></figure>
           </div>
         </article>
 
-           <article class="project" id="p-escapegame">
+        <!-- 04 Escape Room -->
+        <article class="project" id="p-escapegame">
           <header class="project-head">
             <div>
-              <span class="idx mono">03</span>
+              <span class="idx mono">04</span>
               <h2 data-en="Escape Room — learning game (university project)">Escape Room — Lernspiel (Uni-Projekt)</h2>
             </div>
             <span class="project-meta mono" data-en="2024 · University Project · Godot, C++, Blender">2024 · University Project · Godot, C++, Blender</span>
@@ -232,20 +254,20 @@
           </p>
           <a class="project-link mono" href="https://escape-game-informatik.umwelt-campus.de/" target="_blank" rel="noopener" data-en="Play the game ↗">Zum Spiel ↗</a>
           <figure class="shot shot-primary">
-            <img src="media/projects/escape/escape-1.webp" alt="Sci-Fi-Luftschleuse — Raum 47" loading="lazy" />
+            <img src="media/projects/escape/escape-1.webp" alt="Escape Room — Sci-Fi-Luftschleuse in Raum 47" data-en-alt="Escape room — sci-fi airlock in room 47" loading="lazy" />
           </figure>
           <div class="shot-row cols-3">
-            <figure class="shot"><img src="media/projects/escape/escape-4.webp" alt="Reaktor-Raum" loading="lazy" /></figure>
-            <figure class="shot"><img src="media/projects/escape/escape-3.webp" alt="Rätsel-Terminal" loading="lazy" /></figure>
-            <figure class="shot"><img src="media/projects/escape/escape-2.webp" alt="Weiterer Raum" loading="lazy" /></figure>
+            <figure class="shot"><img src="media/projects/escape/escape-4.webp" alt="Escape Room — Reaktorraum der Station" data-en-alt="Escape room — the station's reactor room" loading="lazy" /></figure>
+            <figure class="shot"><img src="media/projects/escape/escape-3.webp" alt="Escape Room — Code-Eingabe zur manuellen Luftschleusenverriegelung" data-en-alt="Escape room — code entry for the manual airlock lock" loading="lazy" /></figure>
+            <figure class="shot"><img src="media/projects/escape/escape-2.webp" alt="Escape Room — Terminal mit Wartungslog, aus dem sich der Code X = 17 ergibt" data-en-alt="Escape room — maintenance-log terminal that yields the code X = 17" loading="lazy" /></figure>
           </div>
         </article>
 
-        <!-- 03 MyTyrolStay -->
+        <!-- 05 MyTyrolStay -->
         <article class="project" id="p-mytyrolstay">
           <header class="project-head">
             <div>
-              <span class="idx mono">04</span>
+              <span class="idx mono">05</span>
               <h2>MyTyrolStay — Self-Check-in</h2>
             </div>
             <span class="project-meta mono" data-en="2025 · UX & prototyping · Figma · usability testing">2025 · UX &amp; Prototyping · Figma · Usability-Testing</span>
@@ -259,35 +281,15 @@
             <a class="project-link mono" href="media/projects/checkin/report/HCI_REPORT_geschwärzt.pdf" target="_blank" rel="noopener" data-en="more info ↗">mehr infos ↗</a>
           </div>
           <div class="shot-row cols-2">
-            <figure class="shot2"><img src="media/projects/checkin/checkin-01.webp" alt="Check-in — Willkommensbildschirm" loading="lazy" /></figure>
-            <figure class="shot2"><img src="media/projects/checkin/checkin-07.webp" alt="Check-in — weiterer Screen" loading="lazy" /></figure>
+            <figure class="shot2"><img src="media/projects/checkin/checkin-01.webp" alt="MyTyrolStay — Willkommensbildschirm des Check-in-Kiosks" data-en-alt="MyTyrolStay — welcome screen of the check-in kiosk" loading="lazy" /></figure>
+            <figure class="shot2"><img src="media/projects/checkin/checkin-07.webp" alt="MyTyrolStay — Schritt 2: Ausweis oder Reisepass scannen" data-en-alt="MyTyrolStay — step 2: scan passport or ID card" loading="lazy" /></figure>
           </div>
           <div class="shot-row cols-3">
-            <figure class="shot2"><img src="media/projects/checkin/checkin-08.webp" alt="Check-in — Ladevorgang" loading="lazy" /></figure>
-            <figure class="shot2"><img src="media/projects/checkin/checkin-10.webp" alt="Check-in  — weiterer Screen" loading="lazy" /></figure>
-            <figure class="shot2"><img src="media/projects/checkin/checkin-11.webp" alt="Check-in — weiterer Screen" loading="lazy" /></figure>
+            <figure class="shot2"><img src="media/projects/checkin/checkin-08.webp" alt="MyTyrolStay — Ladevorgang während der Prüfung" data-en-alt="MyTyrolStay — loading state during verification" loading="lazy" /></figure>
+            <figure class="shot2"><img src="media/projects/checkin/checkin-10.webp" alt="MyTyrolStay — Schritt 3: Identitätsprüfung starten" data-en-alt="MyTyrolStay — step 3: start identity verification" loading="lazy" /></figure>
+            <figure class="shot2"><img src="media/projects/checkin/checkin-11.webp" alt="MyTyrolStay — Schritt 3: Gesicht im Kamerarahmen ausrichten" data-en-alt="MyTyrolStay — step 3: align your face with the camera frame" loading="lazy" /></figure>
           </div>
            
-        </article>
-
-        <!-- 04 Task App -->
-        <article class="project" id="p-taskapp">
-          <header class="project-head">
-            <div>
-              <span class="idx mono">05</span>
-              <h2 data-en="Task App — personal product">Task-App — eigenes Produkt</h2>
-            </div>
-            <span class="project-meta mono" data-en="2025 · Personal product · Angular">2025 · Eigenes Produkt · Angular</span>
-          </header>
-          <p class="project-desc" data-en="A small task app I built for myself — with categories, folders and progress.">
-            Eine kleine Task-App, die ich selbst gebaut habe — mit Kategorien, Ordnern und Fortschritt.
-          </p>
-          <a class="project-link mono" href="https://github.com/FlorianBohrer/Todo_App" target="_blank" rel="noopener" data-en="Code on GitHub ↗">Code auf GitHub ↗</a>
-          <div class="shot-row cols-2">
-            <figure class="shot"><img src="media/projects/todo/todo-1.webp" alt="Task-App — Alle Aufgaben" loading="lazy" /></figure>
-            <figure class="shot"><img src="media/projects/todo/todo-2.webp" alt="Task-App — Ordner/Kategorien" loading="lazy" /></figure>
-          </div>
-         
         </article>
       </section>
 
@@ -299,20 +301,20 @@
             <div class="skill-head">
               <span class="skill-dot" aria-hidden="true"></span>
               <h3 class="mono" data-en="Frontend &amp; UI">Frontend &amp; UI</h3>
-              <span class="skill-count mono">07</span>
+              <span class="skill-count mono">08</span>
             </div>
             <ul class="chips">
-              <li data-jump="p-arhive" tabindex="0" role="link">React</li><li data-jump="p-arhive" tabindex="0" role="link">JavaScript</li><li data-jump="p-taskapp" tabindex="0" role="link">Angular</li><li data-jump="p-hypercharger" tabindex="0" role="link">Vue</li><li data-jump="p-hypercharger" tabindex="0" role="link">HTML &amp; CSS</li><li data-jump="p-mytyrolstay" tabindex="0" role="link">Interaction Design</li><li data-jump="p-mytyrolstay" tabindex="0" role="link">Usability Testing</li>
+              <li data-jump="p-arhive" tabindex="0" role="link">React</li><li data-jump="p-arhive" tabindex="0" role="link">JavaScript</li><li data-jump="p-taskapp" tabindex="0" role="link">Angular</li><li data-jump="p-taskapp" tabindex="0" role="link">TypeScript</li><li data-jump="p-hypercharger" tabindex="0" role="link">Vue</li><li data-jump="p-hypercharger" tabindex="0" role="link">HTML &amp; CSS</li><li data-jump="p-mytyrolstay" tabindex="0" role="link">Interaction Design</li><li data-jump="p-mytyrolstay" tabindex="0" role="link">Usability Testing</li>
             </ul>
           </div>
           <div class="skill-group" style="--g: oklch(60% 0.14 250)">
             <div class="skill-head">
               <span class="skill-dot" aria-hidden="true"></span>
               <h3 class="mono" data-en="Backend &amp; Data">Backend &amp; Daten</h3>
-              <span class="skill-count mono">05</span>
+              <span class="skill-count mono">06</span>
             </div>
             <ul class="chips">
-              <li data-jump="p-arhive" tabindex="0" role="link">REST APIs</li><li data-jump="p-arhive" tabindex="0" role="link">MQTT</li><li data-jump="p-arhive" tabindex="0" role="link">Node-RED</li><li>SQL</li><li>PHP</li>
+              <li data-jump="p-taskapp" tabindex="0" role="link">NestJS</li><li data-jump="p-arhive" tabindex="0" role="link">REST APIs</li><li data-jump="p-arhive" tabindex="0" role="link">MQTT</li><li data-jump="p-arhive" tabindex="0" role="link">Node-RED</li><li>SQL</li><li>PHP</li>
             </ul>
           </div>
           <div class="skill-group" style="--g: oklch(74% 0.14 80)">
