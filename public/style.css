@@ -154,68 +154,159 @@ body::after {
 }
 [data-theme="dark"] body::after { opacity: 0.055; }
 
-/* ---------- focus · "show, don't tell" showcase ----------
- * Hallmark · component: focus-section · genre: editorial · pre-emit critique: P5 H5 E5 S5 R4 V5
- * Each row demonstrates the skill it names (rotating 3D cube · live data graph · perf gauge). */
+/* ---------- focus · "show, don't tell" bento ----------
+ * Each card demonstrates the skill it names, and each one can be touched:
+ * drag the icosahedron · click to send data through the graph · a real fps
+ * reading of the visitor's own browser. Demos are drawn in main.js. */
 .focus { padding-block: clamp(48px, 8vw, 100px); }
-.focus-head { border-top: 1px solid var(--line); padding-top: clamp(28px, 4vw, 44px); max-width: 44ch; }
-.focus-kicker { font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-3); margin-bottom: 16px; }
-.focus-lead { font-size: clamp(1.5rem, 3.6vw, 2.5rem); font-weight: 600; line-height: 1.12; letter-spacing: -0.028em; color: var(--ink); text-wrap: balance; }
-.focus-lead em { font-style: normal; }
+.focus-lead {
+  font-size: clamp(1.5rem, 3.6vw, 2.4rem); font-weight: 600; line-height: 1.12;
+  letter-spacing: -0.028em; color: var(--ink); max-width: 24ch; text-wrap: balance;
+  margin-top: calc(-1 * clamp(14px, 3vw, 32px));
+}
 
-.focus-rows { list-style: none; margin-top: clamp(36px, 6vw, 76px); display: grid; gap: clamp(30px, 5vw, 68px); }
-.focus-row {
+.focus-grid {
+  list-style: none; margin-top: clamp(32px, 5vw, 56px);
+  display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(12px, 1.6vw, 18px);
+}
+.focus-card {
   --g: var(--accent);
-  display: grid; grid-template-columns: minmax(0, 340px) 1fr; gap: clamp(24px, 4vw, 56px); align-items: center;
+  --mx: 50%; --my: 50%;
+  position: relative; isolation: isolate; display: flex; flex-direction: column;
+  border: 1px solid var(--line); border-radius: 20px; overflow: hidden;
+  background: var(--paper-2);
+  box-shadow: 0 1px 2px var(--shadow-warm), 0 18px 40px oklch(30% 0.04 48 / 0.06);
+  transition: transform 0.4s var(--ease), box-shadow 0.4s var(--ease), border-color 0.4s var(--ease);
 }
-.focus-row:nth-child(even) { grid-template-columns: 1fr minmax(0, 340px); }
-.focus-row:nth-child(even) .focus-demo { order: 2; }
-.focus-row:nth-child(2).reveal.in { animation-delay: 0.08s; }
-.focus-row:nth-child(3).reveal.in { animation-delay: 0.16s; }
+.focus-card--wide { grid-column: 1 / -1; display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); }
+/* backwards, not both: a held `transform: none` would pin the cards and kill the hover lift */
+.focus-card.reveal.in { animation: reveal-in 0.72s var(--ease) backwards; }
+.focus-grid .focus-card:nth-child(2).reveal.in { animation-delay: 0.08s; }
+.focus-grid .focus-card:nth-child(3).reveal.in { animation-delay: 0.16s; }
 
-/* demo panel */
-.focus-demo {
-  position: relative; aspect-ratio: 16 / 11; border-radius: 18px; overflow: hidden;
-  border: 1px solid color-mix(in oklch, var(--g) 26%, var(--line));
-  background: radial-gradient(120% 90% at 50% 10%, color-mix(in oklch, var(--g) 10%, transparent), transparent 60%), var(--paper-2);
-  display: grid; place-items: center;
-  box-shadow: 0 1px 2px var(--shadow-warm), 0 22px 48px oklch(30% 0.04 48 / 0.08);
+/* cursor spotlight: a soft wash inside, and a lit rim that follows the pointer */
+.focus-card::before,
+.focus-card::after {
+  content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none;
+  opacity: 0; transition: opacity 0.4s var(--ease);
 }
-.demo-glow { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 58%; aspect-ratio: 1; border-radius: 50%; filter: blur(40px); background: color-mix(in oklch, var(--g) 42%, transparent); opacity: 0.38; }
-.demo-tag { position: absolute; left: 12px; bottom: 10px; font-size: 10.5px; letter-spacing: 0.03em; color: color-mix(in oklch, var(--g) 68%, var(--ink-3)); }
+.focus-card::before {
+  z-index: -1;
+  background: radial-gradient(380px circle at var(--mx) var(--my), color-mix(in oklab, var(--g) 10%, transparent), transparent 65%);
+}
+.focus-card::after {
+  z-index: 3; padding: 1px;
+  background: radial-gradient(260px circle at var(--mx) var(--my), color-mix(in oklab, var(--g) 75%, transparent), transparent 70%);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+}
+@media (hover: hover) {
+  .focus-card:hover {
+    transform: translateY(-4px);
+    border-color: color-mix(in oklab, var(--g) 30%, var(--line));
+    box-shadow: 0 2px 4px var(--shadow-warm), 0 28px 56px oklch(30% 0.04 48 / 0.11);
+  }
+  .focus-card:hover::before, .focus-card:hover::after { opacity: 1; }
+}
+
+/* demo stage: tinted glow over a fading dot grid */
+.focus-demo {
+  position: relative; min-height: clamp(200px, 26vw, 230px); overflow: hidden;
+  display: grid; place-items: center;
+  background: radial-gradient(120% 90% at 50% 0%, color-mix(in oklab, var(--g) 9%, transparent), transparent 62%);
+}
+.focus-demo::before {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background-image: radial-gradient(color-mix(in oklch, var(--ink) 16%, transparent) 1px, transparent 1.3px);
+  background-size: 16px 16px; background-position: center;
+  -webkit-mask-image: radial-gradient(75% 70% at 50% 50%, #000, transparent);
+  mask-image: radial-gradient(75% 70% at 50% 50%, #000, transparent);
+}
+.focus-card--wide .focus-demo { min-height: clamp(260px, 34vw, 330px); }
+/* keep the drawings clear of the tags along the bottom edge */
+.demo-graph, .demo-fps { padding-block: 16px 40px; }
+.demo-glow {
+  position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+  width: 56%; aspect-ratio: 1; border-radius: 50%; filter: blur(42px);
+  background: color-mix(in oklab, var(--g) 42%, transparent); opacity: 0.32; pointer-events: none;
+}
+.demo-tag, .demo-hint {
+  position: absolute; bottom: 12px; z-index: 2; font-size: 10.5px; letter-spacing: 0.03em;
+  color: color-mix(in oklab, var(--g) 62%, var(--ink-3));
+}
+.demo-tag { left: 14px; }
+.demo-hint {
+  right: 12px; padding: 4px 8px; border-radius: 999px; line-height: 1;
+  border: 1px solid color-mix(in oklab, var(--g) 28%, transparent);
+  background: color-mix(in oklch, var(--paper) 70%, transparent);
+  transition: opacity 0.3s var(--ease);
+}
+.focus-demo.touched .demo-hint { opacity: 0; }
 
 /* copy */
-.focus-copy { position: relative; }
-.focus-num { display: block; font-size: clamp(2.6rem, 6vw, 4.4rem); font-weight: 500; line-height: 0.85; letter-spacing: -0.03em; color: color-mix(in oklch, var(--g) 86%, transparent); margin-bottom: 8px; }
-.focus-copy h3 { font-size: clamp(1.4rem, 2.8vw, 2.05rem); font-weight: 600; letter-spacing: -0.025em; }
-.focus-copy p { margin-top: 12px; color: var(--ink-2); font-size: clamp(1rem, 1.3vw, 1.1rem); line-height: 1.6; max-width: 42ch; }
+.focus-copy { padding: clamp(18px, 2.2vw, 24px) clamp(20px, 2.4vw, 26px) clamp(22px, 2.6vw, 28px); border-top: 1px solid var(--line-2); }
+.focus-card--wide .focus-copy { border-top: 0; border-left: 1px solid var(--line-2); display: flex; flex-direction: column; justify-content: center; align-items: flex-start; }
+.focus-num {
+  display: inline-block; font-size: 11px; letter-spacing: 0.06em; line-height: 1; padding: 5px 8px; margin-bottom: 14px;
+  border-radius: 999px; color: color-mix(in oklab, var(--g) 80%, var(--ink));
+  background: color-mix(in oklab, var(--g) 13%, transparent);
+}
+.focus-copy h3 { font-size: clamp(1.15rem, 1.9vw, 1.35rem); font-weight: 600; letter-spacing: -0.022em; line-height: 1.2; }
+.focus-card--wide .focus-copy h3 { font-size: clamp(1.35rem, 2.6vw, 1.85rem); }
+.focus-copy p { margin-top: 8px; color: var(--ink-2); font-size: clamp(0.95rem, 1.2vw, 1.02rem); line-height: 1.55; max-width: 42ch; }
 
-/* demo 1 · rotating wireframe icosahedron (drawn on <canvas> in main.js) */
-.ico { display: block; width: 84%; max-width: 272px; height: auto; }
+/* demo 1 · draggable wireframe icosahedron */
+.ico { position: absolute; inset: 0; width: 100%; height: 100%; cursor: grab; touch-action: pan-y; }
+.ico.dragging { cursor: grabbing; }
 
-/* demo 2 · node graph with flowing data */
-.demo-graph svg { width: 80%; max-width: 240px; overflow: visible; }
-.demo-graph .edge { fill: none; stroke: var(--g); stroke-width: 1.6; stroke-dasharray: 4 7; opacity: 0.7; animation: dataflow 1.5s linear infinite; }
-.demo-graph .node { fill: var(--paper-2); stroke: var(--g); stroke-width: 1.6; }
-.demo-graph .hub { fill: color-mix(in oklch, var(--g) 28%, var(--paper-2)); animation: hub-pulse 2.4s ease-in-out infinite; }
-@keyframes dataflow { to { stroke-dashoffset: -22; } }
-@keyframes hub-pulse { 0%, 100% { r: 9; } 50% { r: 10.6; } }
+/* demo 2 · data packets travelling sensor → hub → view */
+.demo-graph { cursor: pointer; }
+.demo-graph svg { position: relative; width: 86%; max-width: 300px; overflow: visible; }
+.demo-graph .edges path { fill: none; stroke: color-mix(in oklab, var(--g) 34%, var(--line)); stroke-width: 1.2; }
+.demo-graph .node { fill: var(--paper-2); stroke: var(--g); stroke-width: 1.5; }
+.demo-graph .hub { fill: color-mix(in oklab, var(--g) 24%, var(--paper-2)); }
+.demo-graph .packets circle { fill: var(--g); }
+.demo-graph .labels text { font-family: var(--mono); font-size: 8.5px; fill: var(--ink-3); text-anchor: middle; }
 
-/* demo 3 · performance gauge */
-.demo-gauge svg { width: 58%; max-width: 132px; }
-.demo-gauge .track { fill: none; stroke: var(--line); stroke-width: 8; }
-.demo-gauge .arc { fill: none; stroke: var(--g); stroke-width: 8; stroke-linecap: round; stroke-dasharray: 289; stroke-dashoffset: 289; animation: gauge-fill 2.8s var(--ease) infinite alternate; }
-@keyframes gauge-fill { to { stroke-dashoffset: 66; } }
-.gauge-label { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 22px; font-weight: 600; letter-spacing: -0.02em; color: var(--ink); }
-.gauge-label small { font-size: 10px; color: var(--ink-3); margin-left: 1px; }
+/* demo 3 · live fps of the visitor's browser */
+.fps-ring { position: relative; width: 46%; max-width: 128px; }
+.fps-ring .track { fill: none; stroke: var(--line); stroke-width: 7; }
+.fps-ring .arc {
+  fill: none; stroke: var(--g); stroke-width: 7; stroke-linecap: round;
+  stroke-dasharray: 289; stroke-dashoffset: 289; transition: stroke-dashoffset 0.5s var(--ease);
+}
+.fps-label {
+  position: absolute; top: 50%; left: 50%; transform: translate(-50%, -54%);
+  display: grid; justify-items: center; line-height: 1; color: var(--ink);
+}
+.fps-val { font-size: 24px; font-weight: 600; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
+.fps-label small { font-size: 10px; color: var(--ink-3); margin-top: 3px; }
+.fps-ms { font-style: normal; font-size: 9.5px; color: var(--ink-3); margin-top: 6px; font-variant-numeric: tabular-nums; }
+.fps-spark { position: absolute; left: 0; right: 0; bottom: 34px; width: 100%; height: 30px; opacity: 0.7; }
+.fps-spark polyline { fill: none; stroke: var(--g); stroke-width: 1.2; vector-effect: non-scaling-stroke; stroke-linejoin: round; }
+
+/* scroll-driven: the glow drifts through each card as it crosses the viewport */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .focus-card .demo-glow { animation: glow-drift linear both; animation-timeline: view(); }
+  }
+}
+@keyframes glow-drift {
+  from { transform: translate(-50%, -22%) scale(0.8); opacity: 0.18; }
+  50% { opacity: 0.4; }
+  to { transform: translate(-50%, -78%) scale(1.1); opacity: 0.2; }
+}
 
 @media (max-width: 720px) {
-  .focus-row, .focus-row:nth-child(even) { grid-template-columns: 1fr; gap: 18px; }
-  .focus-row:nth-child(even) .focus-demo { order: 0; }
+  .focus-card--wide { display: flex; }
+  .focus-card--wide .focus-copy { border-left: 0; border-top: 1px solid var(--line-2); }
+}
+@media (max-width: 560px) {
+  .focus-grid { grid-template-columns: 1fr; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .demo-graph .edge, .demo-graph .hub, .demo-gauge .arc { animation: none; }
-  .demo-gauge .arc { stroke-dashoffset: 66; }
+  .fps-spark { display: none; }
 }
 
 /* ---------- work / projects ---------- */

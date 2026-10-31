@@ -212,7 +212,7 @@ if ("IntersectionObserver" in window && navLinks.size) {
   const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const targets = [
     ...document.querySelectorAll(
-      ".section-label, .project-head, .project-desc, .shot, .about-grid, .big-mail, .contact-links, .skill-group, .focus-row"
+      ".section-label, .project-head, .project-desc, .shot, .about-grid, .big-mail, .contact-links, .skill-group, .focus-lead, .focus-card"
     ),
   ];
   targets.forEach((el) => el.classList.add("reveal"));
@@ -257,7 +257,20 @@ if ("IntersectionObserver" in window && navLinks.size) {
   });
 })();
 
-/* ---------- focus demo · rotating wireframe icosahedron (pure canvas, no libs) ---------- */
+/* ---------- focus demos: only animate while on screen and the tab is visible ---------- */
+function whileVisible(el, start, stop) {
+  let onScreen = false;
+  const sync = () => (onScreen && !document.hidden ? start() : stop());
+  document.addEventListener("visibilitychange", sync);
+  if ("IntersectionObserver" in window) {
+    new IntersectionObserver(([e]) => { onScreen = e.isIntersecting; sync(); }, { threshold: 0 }).observe(el);
+  } else {
+    onScreen = true;
+    sync();
+  }
+}
+
+/* ---------- focus demo 1 · draggable wireframe icosahedron (pure canvas, no libs) ---------- */
 (() => {
   const canvas = document.querySelector(".ico");
   if (!canvas) return;
@@ -280,7 +293,10 @@ if ("IntersectionObserver" in window && navLinks.size) {
       if (Math.abs(dx * dx + dy * dy + dz * dz - 4) < 1e-3) E.push([i, j]);
     }
 
-  let W = 0, H = 0, DPR = 1, raf = 0, running = false, t0 = 0;
+  // idle spin in rad/ms; a drag hands over its own velocity, which then eases back to idle
+  const IDLE_X = 0.00026, IDLE_Y = 0.00042, MAX_V = 0.02;
+  let W = 0, H = 0, DPR = 1, raf = 0, running = false, last = 0;
+  let ax = 0.5, ay = 0.75, vx = IDLE_X, vy = IDLE_Y, drag = null;
 
   function resize() {
     DPR = Math.min(2, window.devicePixelRatio || 1);
@@ -291,52 +307,232 @@ if ("IntersectionObserver" in window && navLinks.size) {
     ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
   }
 
-  function render(ax, ay) {
+  function render() {
     ctx.clearRect(0, 0, W, H);
-    const cx = W / 2, cy = H / 2, R = Math.min(W, H) * 0.34;
+    const cx = W / 2, cy = H / 2, R = Math.min(W, H) * 0.17;
     const sx = Math.sin(ax), cxr = Math.cos(ax), sy = Math.sin(ay), cyr = Math.cos(ay);
     const pts = V.map(([x, y, z]) => {
       const x1 = x * cyr - z * sy, z1 = x * sy + z * cyr; // rotate Y
       const y2 = y * cxr - z1 * sx, z2 = y * sx + z1 * cxr; // rotate X
-      const p = 3 / (3 + z2); // perspective
+      const p = 6 / (6 + z2); // perspective (+z is away from the viewer)
       return [cx + x1 * R * p, cy + y2 * R * p, z2];
     });
+    const near = (z) => (2 - z) / 4; // 0 at the back, 1 at the front
     ctx.lineCap = "round";
     ctx.strokeStyle = stroke;
+    ctx.lineWidth = 1.3;
     for (const [i, j] of E) {
-      const za = (pts[i][2] + pts[j][2]) / 2;
-      ctx.globalAlpha = 0.26 + 0.62 * ((za + 2) / 4); // far edges fainter
-      ctx.lineWidth = 1.3;
+      ctx.globalAlpha = 0.16 + 0.74 * near((pts[i][2] + pts[j][2]) / 2); // far edges fainter
       ctx.beginPath();
       ctx.moveTo(pts[i][0], pts[i][1]);
       ctx.lineTo(pts[j][0], pts[j][1]);
       ctx.stroke();
     }
-    ctx.globalAlpha = 1;
     ctx.fillStyle = stroke;
-    for (const p of pts) { ctx.beginPath(); ctx.arc(p[0], p[1], 1.7, 0, 6.29); ctx.fill(); }
+    for (const p of pts) {
+      ctx.globalAlpha = 0.4 + 0.6 * near(p[2]);
+      ctx.beginPath();
+      ctx.arc(p[0], p[1], 1.2 + 1.6 * near(p[2]), 0, 6.29);
+      ctx.fill();
+    }
+    ctx.globalAlpha = 1;
   }
 
   function frame(t) {
-    if (!t0) t0 = t;
-    const a = (t - t0) * 0.00042;
-    render(a * 0.62, a);
+    const dt = Math.min(48, last ? t - last : 16);
+    last = t;
+    if (!drag) {
+      const k = 1 - Math.pow(0.998, dt); // frame-rate independent ease back to the idle spin
+      vx += (IDLE_X - vx) * k;
+      vy += (IDLE_Y - vy) * k;
+      ax += vx * dt;
+      ay += vy * dt;
+    }
+    render();
     if (running) raf = requestAnimationFrame(frame);
   }
 
-  const start = () => { if (!running && !reduce) { running = true; t0 = 0; raf = requestAnimationFrame(frame); } };
+  const start = () => { if (!running && !reduce) { running = true; last = 0; raf = requestAnimationFrame(frame); } };
   const stop = () => { running = false; cancelAnimationFrame(raf); };
+  const clamp = (v) => Math.max(-MAX_V, Math.min(MAX_V, v));
+
+  /* drag to rotate; let go and it keeps the fling, then settles back into its idle spin */
+  canvas.addEventListener("pointerdown", (e) => {
+    drag = { x: e.clientX, y: e.clientY, t: e.timeStamp };
+    canvas.setPointerCapture(e.pointerId);
+    canvas.classList.add("dragging");
+    canvas.parentElement.classList.add("touched");
+  });
+  canvas.addEventListener("pointermove", (e) => {
+    if (!drag) return;
+    const dx = (e.clientX - drag.x) * 0.01, dy = (e.clientY - drag.y) * 0.01;
+    const dt = Math.max(1, e.timeStamp - drag.t);
+    ay += dx;
+    ax += dy;
+    vy = clamp(dx / dt);
+    vx = clamp(dy / dt);
+    drag = { x: e.clientX, y: e.clientY, t: e.timeStamp };
+    if (reduce) render(); // no animation loop: direct manipulation only
+  });
+  const release = (e) => {
+    if (!drag) return;
+    if (e.timeStamp - drag.t > 80) vx = vy = 0; // held still before letting go: no fling
+    drag = null;
+    canvas.classList.remove("dragging");
+  };
+  canvas.addEventListener("pointerup", release);
+  canvas.addEventListener("pointercancel", release);
 
   resize();
-  window.addEventListener("resize", () => { resize(); if (reduce) render(0.5, 0.75); }, { passive: true });
-  document.addEventListener("visibilitychange", () => (document.hidden ? stop() : start()));
+  render();
+  window.addEventListener("resize", () => { resize(); render(); }, { passive: true });
+  if (!reduce) whileVisible(canvas, start, stop);
+})();
+
+/* ---------- focus demo 2 · data packets travelling sensor → hub → view ---------- */
+(() => {
+  const demo = document.querySelector(".demo-graph");
+  if (!demo) return;
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const svg = demo.querySelector("svg");
+  const layer = svg.querySelector(".packets");
+  const nodes = [...svg.querySelectorAll(".node")];
+  const pos = nodes.map((n) => [+n.getAttribute("cx"), +n.getAttribute("cy")]);
+  const baseR = nodes.map((n) => +n.getAttribute("r"));
+  const heat = nodes.map(() => 0);
+  const INS = [0, 1, 2], HUB = 3, OUTS = [4, 5];
+  const NS = "http://www.w3.org/2000/svg";
+  const SEG_MS = 720; // time per edge
+
+  const pick = (a) => a[Math.floor(Math.random() * a.length)];
+  const ease = (f) => f * f * (3 - 2 * f);
+  // position along the two-edge route at t ∈ [0, 2)
+  const at = (route, t) => {
+    const s = t < 1 ? 0 : 1, f = ease(t - s);
+    const a = pos[route[s]], b = pos[route[s + 1]];
+    return [a[0] + (b[0] - a[0]) * f, a[1] + (b[1] - a[1]) * f];
+  };
+  const place = (el, [x, y]) => { el.setAttribute("cx", x.toFixed(1)); el.setAttribute("cy", y.toFixed(1)); };
+  const dot = (r, opacity) => {
+    const c = document.createElementNS(NS, "circle");
+    c.setAttribute("r", r);
+    if (opacity) c.setAttribute("opacity", opacity);
+    layer.appendChild(c);
+    return c;
+  };
+
   if (reduce) {
-    render(0.5, 0.75);
-  } else if ("IntersectionObserver" in window) {
-    new IntersectionObserver(([e]) => (e.isIntersecting ? start() : stop()), { threshold: 0 }).observe(canvas);
-  } else {
-    start();
+    // one calm still: a few packets mid-flight, nothing moves on its own
+    [[[0, HUB, 4], 0.55], [[2, HUB, 5], 0.3], [[1, HUB, 4], 1.45]].forEach(([route, t]) => place(dot(2.6), at(route, t)));
+    demo.querySelector(".demo-hint").hidden = true;
+    return;
   }
+
+  let packets = [], raf = 0, running = false, last = 0, nextSpawn = 0;
+  const spawn = (startAt) => packets.push({ route: [pick(INS), HUB, pick(OUTS)], startAt, t: 0, head: null, tail: null, hub: false });
+
+  function frame(now) {
+    const dt = Math.min(48, last ? now - last : 16);
+    last = now;
+    if (now >= nextSpawn) {
+      spawn(now);
+      nextSpawn = now + 520 + Math.random() * 560;
+    }
+    packets = packets.filter((p) => {
+      if (now < p.startAt) return true; // queued by a click burst
+      if (!p.head) {
+        p.tail = dot(1.6, 0.35);
+        p.head = dot(2.6);
+        heat[p.route[0]] = 1; // the source node fires as the packet leaves
+      } else p.t += dt / SEG_MS;
+      if (!p.hub && p.t >= 1) { p.hub = true; heat[HUB] = 1; }
+      if (p.t >= 2) {
+        heat[p.route[2]] = 1;
+        p.head.remove();
+        p.tail.remove();
+        return false;
+      }
+      place(p.head, at(p.route, p.t));
+      place(p.tail, at(p.route, Math.max(0, p.t - 0.09)));
+      return true;
+    });
+    const decay = Math.pow(0.995, dt);
+    nodes.forEach((n, i) => {
+      if (heat[i] < 0.01 && !n.style.fill) return;
+      heat[i] = heat[i] < 0.01 ? 0 : heat[i] * decay;
+      n.setAttribute("r", (baseR[i] + heat[i] * 2.4).toFixed(2));
+      n.style.fill = heat[i] ? `color-mix(in oklab, var(--g) ${Math.round(heat[i] * 70)}%, var(--paper-2))` : "";
+    });
+    if (running) raf = requestAnimationFrame(frame);
+  }
+
+  const start = () => { if (!running) { running = true; last = 0; raf = requestAnimationFrame(frame); } };
+  const stop = () => { running = false; cancelAnimationFrame(raf); };
+
+  // click / tap: send a burst of data through the graph
+  demo.addEventListener("click", () => {
+    const now = performance.now();
+    for (let i = 0; i < 6; i++) spawn(now + i * 90);
+    demo.classList.add("touched");
+  });
+
+  whileVisible(demo, start, stop);
+})();
+
+/* ---------- focus demo 3 · live frame rate of the visitor's own browser ---------- */
+(() => {
+  const demo = document.querySelector(".demo-fps");
+  if (!demo) return;
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const valEl = demo.querySelector(".fps-val");
+  const msEl = demo.querySelector(".fps-ms");
+  const arc = demo.querySelector(".fps-ring .arc");
+  const line = demo.querySelector(".fps-spark polyline");
+  const C = 289; // ring circumference, 2π · 46
+  const N = 90; // frames kept for the frame-time graph
+  const RATES = [30, 50, 60, 75, 90, 100, 120, 144, 165, 240];
+  const samples = [];
+  let hz = 60, raf = 0, running = false, last = 0, lastPaint = 0;
+
+  function paint() {
+    const recent = samples.slice(-30);
+    const avg = recent.reduce((a, b) => a + b, 0) / recent.length;
+    const fps = 1000 / avg;
+    // the display's refresh rate is the best sustained rate seen, snapped to a real panel rate
+    const snapped = RATES.reduce((a, b) => (Math.abs(b - fps) < Math.abs(a - fps) ? b : a));
+    if (snapped > hz) hz = snapped;
+    valEl.textContent = Math.round(Math.min(fps, hz));
+    msEl.textContent = `${avg.toFixed(1)} ms`;
+    arc.style.strokeDashoffset = (C * (1 - Math.min(1, fps / hz))).toFixed(1);
+  }
+
+  // frame-time graph: a flat line when smooth, spikes upward on every dropped frame
+  function spark() {
+    const budget = 1000 / hz, off = N - samples.length;
+    line.setAttribute(
+      "points",
+      samples.map((dt, i) => `${(((i + off) / (N - 1)) * 120).toFixed(1)},${(28 - Math.min(1, dt / (3 * budget)) * 26).toFixed(1)}`).join(" ")
+    );
+  }
+
+  function frame(t) {
+    if (last) {
+      samples.push(t - last);
+      if (samples.length > N) samples.shift();
+    }
+    last = t;
+    if (samples.length > 5 && t - lastPaint > (reduce ? 1000 : 250)) {
+      lastPaint = t;
+      paint();
+    }
+    if (!reduce) spark();
+    if (running) raf = requestAnimationFrame(frame);
+  }
+
+  // last = 0 on every start, so time spent off screen never counts as a slow frame
+  const start = () => { if (!running) { running = true; last = 0; raf = requestAnimationFrame(frame); } };
+  const stop = () => { running = false; cancelAnimationFrame(raf); };
+  whileVisible(demo, start, stop);
 })();
 
 /* ---------- 3D tilt + glare on screenshots, magnetic hover on links (fine pointers only) ---------- */
@@ -374,6 +570,15 @@ if ("IntersectionObserver" in window && navLinks.size) {
       hover = false;
       shot.classList.remove("tilting"); // stylesheet transition eases the spring-back
       queue();
+    });
+  });
+
+  /* focus cards: a spotlight follows the cursor across the card and along its rim */
+  document.querySelectorAll(".focus-card").forEach((card) => {
+    card.addEventListener("pointermove", (e) => {
+      const r = card.getBoundingClientRect();
+      card.style.setProperty("--mx", `${e.clientX - r.left}px`);
+      card.style.setProperty("--my", `${e.clientY - r.top}px`);
     });
   });
 

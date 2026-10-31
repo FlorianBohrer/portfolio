@@ -83,21 +83,20 @@
         </ul>
       </section>
 
-      <!-- FOCUS 
-      <section class="focus" id="focus" aria-label="Was ich am liebsten mache">
-        <div class="focus-head">
-          <p class="focus-kicker mono"><span data-en=""></span></p>
-          <h2 class="focus-lead" data-en="">
-          </h2>
-        </div>
+      <!-- FOCUS · each card demonstrates the skill it names, live and hands-on -->
+      <section class="focus" id="focus" aria-labelledby="focus-lead">
+        <div class="section-label mono"><span data-en="Focus">Fokus</span><span>03</span></div>
+        <h2 class="focus-lead" id="focus-lead" data-en="What I love building: live, right here, to try out.">
+          Was ich am liebsten baue: live, direkt hier zum Ausprobieren.
+        </h2>
 
-        <ol class="focus-rows">
-         
-          <li class="focus-row" style="--g: oklch(62% 0.15 42)">
-            <div class="focus-demo" aria-hidden="true">
+        <ol class="focus-grid">
+          <li class="focus-card focus-card--wide" style="--g: oklch(62% 0.15 42)">
+            <div class="focus-demo demo-ico" aria-hidden="true">
               <div class="demo-glow"></div>
-              <canvas class="ico" width="360" height="240"></canvas>
+              <canvas class="ico"></canvas>
               <span class="demo-tag mono">icosahedron · 12v · 30e</span>
+              <span class="demo-hint mono" data-en="↻ drag">↻ ziehen</span>
             </div>
             <div class="focus-copy">
               <span class="focus-num mono">01</span>
@@ -108,20 +107,27 @@
             </div>
           </li>
 
-       
-          <li class="focus-row" style="--g: oklch(60% 0.14 250)">
+          <li class="focus-card" style="--g: oklch(60% 0.14 250)">
             <div class="focus-demo demo-graph" aria-hidden="true">
               <div class="demo-glow"></div>
-              <svg viewBox="0 0 200 120">
+              <svg viewBox="0 0 240 150">
                 <g class="edges">
-                  <path class="edge" d="M28 30 L100 60"/><path class="edge" d="M28 90 L100 60"/>
-                  <path class="edge" d="M100 60 L172 30"/><path class="edge" d="M100 60 L172 90"/>
+                  <path d="M34 30 L120 75" /><path d="M34 75 L120 75" /><path d="M34 120 L120 75" />
+                  <path d="M120 75 L206 45" /><path d="M120 75 L206 105" />
                 </g>
-                <circle class="node" cx="28" cy="30" r="6"/><circle class="node" cx="28" cy="90" r="6"/>
-                <circle class="node hub" cx="100" cy="60" r="9"/>
-                <circle class="node" cx="172" cy="30" r="6"/><circle class="node" cx="172" cy="90" r="6"/>
+                <g class="packets"></g>
+                <g class="nodes">
+                  <circle class="node" cx="34" cy="30" r="5" /><circle class="node" cx="34" cy="75" r="5" /><circle class="node" cx="34" cy="120" r="5" />
+                  <circle class="node hub" cx="120" cy="75" r="9" />
+                  <circle class="node" cx="206" cy="45" r="5" /><circle class="node" cx="206" cy="105" r="5" />
+                </g>
+                <g class="labels">
+                  <text x="34" y="16">sensor</text><text x="34" y="61">mqtt</text><text x="34" y="140">api</text>
+                  <text x="206" y="31">ui</text><text x="206" y="125">ar</text>
+                </g>
               </svg>
               <span class="demo-tag mono">data → view</span>
+              <span class="demo-hint mono" data-en="↯ click">↯ klicken</span>
             </div>
             <div class="focus-copy">
               <span class="focus-num mono">02</span>
@@ -132,27 +138,27 @@
             </div>
           </li>
 
-          
-          <li class="focus-row" style="--g: oklch(64% 0.13 162)">
-            <div class="focus-demo demo-gauge" aria-hidden="true">
+          <li class="focus-card" style="--g: oklch(64% 0.13 162)">
+            <div class="focus-demo demo-fps" aria-hidden="true">
               <div class="demo-glow"></div>
-              <svg viewBox="0 0 120 120">
-                <circle class="track" cx="60" cy="60" r="46"/>
-                <circle class="arc" cx="60" cy="60" r="46" transform="rotate(-90 60 60)"/>
+              <svg class="fps-ring" viewBox="0 0 120 120">
+                <circle class="track" cx="60" cy="60" r="46" />
+                <circle class="arc" cx="60" cy="60" r="46" transform="rotate(-90 60 60)" />
               </svg>
-              <span class="gauge-label mono">60<small>fps</small></span>
+              <span class="fps-label mono"><b class="fps-val">60</b><small>fps</small><i class="fps-ms">16.7 ms</i></span>
+              <svg class="fps-spark" viewBox="0 0 120 30" preserveAspectRatio="none"><polyline points="" /></svg>
+              <span class="demo-tag mono" data-en="live · your browser">live · dein Browser</span>
             </div>
             <div class="focus-copy">
               <span class="focus-num mono">03</span>
-              <h3 data-en="Performance mit
-    × design">Performance × Design</h3>
-              <p data-en="An eye for performance — fast and fluid, in harmony with good design.">
+              <h3 data-en="Performance × design">Performance × Design</h3>
+              <p data-en="An eye for performance: fast and fluid, in harmony with good design.">
                 Ein Auge für Performance: flüssig und schnell, im Einklang mit gutem Design.
               </p>
             </div>
           </li>
         </ol>
-      </section>-->
+      </section>
 
       <!-- WORK -->
       <section class="work" id="work">
