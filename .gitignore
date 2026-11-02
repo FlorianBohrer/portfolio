@@ -5,3 +5,6 @@ dist/
 .vite/
 scratchpad/
 public/*.pdf
+.env
+.env.*
+!.env.example
